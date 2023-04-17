@@ -26,18 +26,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const configs_1 = require("./configs");
-const dotenv = __importStar(require("dotenv"));
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, cookie_parser_1.default)());
-dotenv.config();
-const server = app.listen(process.env.API_PORT, () => {
-    configs_1.sys.log(`API Server listening at ${process.env.BASE_URL}:${process.env.API_PORT}/api`);
-    (0, configs_1.corsConfig)(app);
-    (0, configs_1.routesConfig)(app);
-    (0, configs_1.dbConfigAndConnect)();
-});
+exports.dbConfigAndConnect = exports.routesConfig = exports.corsConfig = exports.sys = void 0;
+const sys = __importStar(require("./sys.config"));
+exports.sys = sys;
+var cors_config_1 = require("./cors.config");
+Object.defineProperty(exports, "corsConfig", { enumerable: true, get: function () { return __importDefault(cors_config_1).default; } });
+var routes_config_1 = require("./routes.config");
+Object.defineProperty(exports, "routesConfig", { enumerable: true, get: function () { return __importDefault(routes_config_1).default; } });
+var db_config_1 = require("./db.config");
+Object.defineProperty(exports, "dbConfigAndConnect", { enumerable: true, get: function () { return __importDefault(db_config_1).default; } });

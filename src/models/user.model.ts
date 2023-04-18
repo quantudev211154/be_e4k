@@ -15,7 +15,8 @@ const userSchema = new Schema(
      */
     password: {
       type: String,
-      require: true,
+      require: false,
+      default: null,
     },
     weeklyScore: {
       type: Number,
@@ -39,13 +40,13 @@ const userSchema = new Schema(
   }
 );
 
-export const USerSchema = mongoose.model("User", userSchema);
+export const UserSchema = mongoose.model("User", userSchema);
 
 export interface IUser {
   _id: ObjectId;
   phone: string;
   username: string;
-  password: string;
+  password?: string;
   weeklyScore?: number;
   level?: number;
   tokenVersion?: number;

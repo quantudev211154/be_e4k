@@ -1,6 +1,7 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 import { IUser } from "./user.model";
 import { CourseConstant } from "../constants";
+import { IWord } from "./word.model";
 
 //round : score , 10, 15, 20
 //reward
@@ -49,6 +50,35 @@ const courseSchema = new Schema(
               require: false,
               default: CourseConstant.LESSION_STANDART_SCORE,
             },
+            audio: [
+              {
+                url: {
+                  type: String,
+                  require: true,
+                },
+              },
+            ],
+            images: [
+              {
+                url: {
+                  type: String,
+                  require: true,
+                },
+              },
+            ],
+            word: [
+              {
+                content: {
+                  type: String,
+                  require: true,
+                },
+                word: {
+                  type: Schema.Types.ObjectId,
+                  require: true,
+                  ref: "Word",
+                },
+              },
+            ],
           },
         ],
         creator: {
@@ -78,11 +108,30 @@ const courseSchema = new Schema(
 
 export const CourseSchema = mongoose.model<ICourse>("Course", courseSchema);
 
+export interface IRoundAudio {
+  _id: ObjectId;
+  url: string;
+}
+
+export interface IRoundImage {
+  _id: ObjectId;
+  url: string;
+}
+
+export interface IRoundWord {
+  _id: ObjectId;
+  content: string;
+  word: IWord;
+}
+
 export interface IRound {
   _id: ObjectId;
   title: string;
   playType: CourseConstant.ERoundPlayType;
   score: number;
+  audio: IRoundAudio[];
+  images: IRoundImage[];
+  words: IRoundWord[];
 }
 
 /**

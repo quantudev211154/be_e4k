@@ -1,7 +1,9 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 import { IUser } from "./user.model";
+import { CourseConstant } from "../constants";
 
-const LESSION_STANDART_SCORE = 100;
+//round : score , 10, 15, 20
+//reward
 
 const courseSchema = new Schema(
   {
@@ -31,11 +33,24 @@ const courseSchema = new Schema(
           require: false,
           default: "",
         },
-        score: {
-          type: Number,
-          require: false,
-          default: LESSION_STANDART_SCORE,
-        },
+        rounds: [
+          {
+            title: {
+              type: String,
+              require: true,
+            },
+            playType: {
+              type: Number,
+              require: true,
+              enum: CourseConstant.ERoundPlayType,
+            },
+            score: {
+              type: Number,
+              require: false,
+              default: CourseConstant.LESSION_STANDART_SCORE,
+            },
+          },
+        ],
         creator: {
           type: Schema.Types.ObjectId,
           require: true,
@@ -61,7 +76,14 @@ const courseSchema = new Schema(
   }
 );
 
-export const CourseSchema = mongoose.model("Course", courseSchema);
+export const CourseSchema = mongoose.model<ICourse>("Course", courseSchema);
+
+export interface IRound {
+  _id: ObjectId;
+  title: string;
+  playType: CourseConstant.ERoundPlayType;
+  score: number;
+}
 
 /**
  * Ech object children in Array will be allocated a _id
@@ -70,8 +92,8 @@ export interface ILession {
   _id: ObjectId;
   title: string;
   description: string;
-  score: number;
   creator: IUser;
+  rounds: IRound[];
 }
 
 export interface ICourse {

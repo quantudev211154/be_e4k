@@ -43,7 +43,7 @@ const diarySchema = new Schema(
   }
 );
 
-export const DiarySchema = mongoose.model("Diary", diarySchema);
+export const DiarySchema = mongoose.model<IDiary>("Diary", diarySchema);
 
 export interface IDiaryLession {
   _id: ObjectId;

@@ -13,7 +13,8 @@ const wordSchema = new Schema(
       require: true,
     },
     level: {
-      type: EWordLevel,
+      type: String,
+      enum: EWordLevel,
       require: false,
       default: EWordLevel.EASY,
     },
@@ -34,7 +35,7 @@ const wordSchema = new Schema(
   }
 );
 
-export const WordSchema = mongoose.model("Word", wordSchema);
+export const WordSchema = mongoose.model<IWord>("Word", wordSchema);
 
 export interface IWord {
   _id: ObjectId;

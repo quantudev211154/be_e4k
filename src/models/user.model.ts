@@ -1,5 +1,10 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 
+export enum EUserRole {
+  ADMIN = "ADMIN",
+  PLAYER = "PLAYER",
+}
+
 const userSchema = new Schema(
   {
     phone: {
@@ -33,6 +38,12 @@ const userSchema = new Schema(
       require: false,
       default: 0,
     },
+    role: {
+      type: String,
+      require: false,
+      enum: EUserRole,
+      default: EUserRole.PLAYER,
+    },
   },
   {
     collection: "users",
@@ -40,7 +51,7 @@ const userSchema = new Schema(
   }
 );
 
-export const UserSchema = mongoose.model("User", userSchema);
+export const UserSchema = mongoose.model<IUser>("User", userSchema);
 
 export interface IUser {
   _id: ObjectId;

@@ -1,6 +1,12 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import { corsConfig, dbConfigAndConnect, routesConfig, sys } from "./configs";
+import {
+  corsConfig,
+  dbConfigAndConnect,
+  routesConfig,
+  swaggerConfig,
+  sys,
+} from "./configs";
 import * as dotenv from "dotenv";
 
 const app = express();
@@ -15,6 +21,7 @@ const server = app.listen(process.env.API_PORT, () => {
     `API Server listening at ${process.env.BASE_URL}:${process.env.API_PORT}/api`
   );
   corsConfig(app);
-  routesConfig(app);
   dbConfigAndConnect();
+  swaggerConfig(app);
+  routesConfig(app);
 });

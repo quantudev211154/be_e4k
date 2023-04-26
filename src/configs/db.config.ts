@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import { DB_MAX_POOL_SIZE } from "../constants/db.constant";
 import { sys } from ".";
+import { DBConstant } from "../constants";
 
 export default function () {
   mongoose
     .connect(process.env.DB_URL as string, {
-      maxPoolSize: DB_MAX_POOL_SIZE,
+      maxPoolSize: DBConstant.DB_MAX_POOL_SIZE,
       dbName: "e4k",
     })
     .then(() => {

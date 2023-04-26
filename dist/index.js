@@ -38,6 +38,7 @@ dotenv.config();
 const server = app.listen(process.env.API_PORT, () => {
     configs_1.sys.log(`API Server listening at ${process.env.BASE_URL}:${process.env.API_PORT}/api`);
     (0, configs_1.corsConfig)(app);
-    (0, configs_1.routesConfig)(app);
     (0, configs_1.dbConfigAndConnect)();
+    (0, configs_1.swaggerConfig)(app);
+    (0, configs_1.routesConfig)(app);
 });

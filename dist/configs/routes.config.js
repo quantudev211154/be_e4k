@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const routes_1 = require("../routes");
 function default_1(app) {
-    app.use("/api", routes_1.AuthRouter);
+    app.use("/api/auth", routes_1.AuthRouter);
+    app.use("/api/public", routes_1.PublicRouter);
     app.use("/api/course", routes_1.CourseRouter);
     app.use("/api/diary", routes_1.DiaryRouter);
     app.use("/api/user", routes_1.UserRouter);

@@ -61,6 +61,7 @@ export interface IUser {
   weeklyScore?: number;
   level?: number;
   tokenVersion?: number;
+  role?: EUserRole;
   registerDate: Date;
   updatedAt: Date;
 }

@@ -16,9 +16,9 @@ export default function (app: Express) {
         description:
           "API Documentation of English For Kids project of Q.Tu and C.Hieu",
       },
-      server: [
+      servers: [
         {
-          url: `${host}/${serverPort}/api`,
+          url: `${host}:${serverPort}/api`,
         },
       ],
     },
@@ -28,5 +28,5 @@ export default function (app: Express) {
   const specs = swaggerJSDoc(swaggerOptions);
 
   app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
-  sys.log(`API Docs has already on ${host}/${serverPort}/api-docs`);
+  sys.log(`API Docs has already on ${host}:${serverPort}/api-docs`);
 }

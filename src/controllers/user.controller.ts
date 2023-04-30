@@ -15,10 +15,7 @@ export async function register(req: Request, res: Response) {
     });
 
     if (existUser)
-      return HelperUtil.returnErrorResult(
-        res,
-        APIMessage.ERR_EXISTED_PHONE_NUMBER
-      );
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_EXISTED_USER);
 
     const newUser = await new UserSchema({
       phone,
@@ -33,7 +30,7 @@ export async function register(req: Request, res: Response) {
       APIMessage.SUC_NEW_USER_CREATED
     );
   } catch (error: any) {
-    HelperUtil.returnErrorResult(res, error);
+    return HelperUtil.returnErrorResult(res, error);
   }
 }
 

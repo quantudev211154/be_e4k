@@ -23,7 +23,7 @@ function register(req, res) {
                 phone,
             });
             if (existUser)
-                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_EXISTED_PHONE_NUMBER);
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_EXISTED_USER);
             const newUser = yield new models_1.UserSchema({
                 phone,
                 username,
@@ -32,7 +32,7 @@ function register(req, res) {
             return utils_1.HelperUtil.returnSuccessfulResult(res, { newUser }, constants_1.APIMessage.SUC_NEW_USER_CREATED);
         }
         catch (error) {
-            utils_1.HelperUtil.returnErrorResult(res, error);
+            return utils_1.HelperUtil.returnErrorResult(res, error);
         }
     });
 }

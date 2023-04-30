@@ -6,6 +6,7 @@ export function createToken(type: "accessToken" | "refreshToken", user: IUser) {
   return sign(
     {
       userId: user._id,
+      role: user.role,
       ...(type === "refreshToken" ? { tokenVersion: user.tokenVersion } : {}),
     },
     type === "accessToken"

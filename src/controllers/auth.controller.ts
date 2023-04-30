@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { AuthUtil, HelperUtil } from "../utils";
 import { APIMessage } from "../constants";
-import { UserSchema } from "../models";
+import { EUserRole, UserSchema } from "../models";
 import { sendRefreshToken } from "../utils/auth.util";
 import { hash, verify } from "argon2";
 
-export async function login(req: Request, res: Response) {
+export async function loginForAdmin(req: Request, res: Response) {
   try {
     const { phone, password } = req.body;
 
@@ -40,7 +40,7 @@ export async function login(req: Request, res: Response) {
   }
 }
 
-export async function register(req: Request, res: Response) {
+export async function registerForAdmin(req: Request, res: Response) {
   try {
     const { phone, password, username } = req.body;
 
@@ -72,7 +72,7 @@ export async function register(req: Request, res: Response) {
   }
 }
 
-export async function logout(req: Request, res: Response) {
+export async function logoutForAdmin(req: Request, res: Response) {
   try {
     const { id } = req.body;
 
@@ -90,6 +90,104 @@ export async function logout(req: Request, res: Response) {
 
     return HelperUtil.returnSuccessfulResult(res, {
       message: "Admin logged out",
+    });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+/**
+ * For player side
+ */
+
+export async function loginForPlayer(req: Request, res: Response) {
+  try {
+    const phone = req.body.phone as string;
+
+    if (!phone)
+      return HelperUtil.returnErrorResult(
+        res,
+        APIMessage.ERR_MISSING_USER_PHONE
+      );
+
+    const existPlayer = await UserSchema.findOne({ phone });
+
+    if (!existPlayer)
+      return HelperUtil.returnErrorResult(
+        res,
+        APIMessage.ERR_NOT_FOUND_USER_BY_PHONE_NUMBER
+      );
+
+    if (existPlayer.role === EUserRole.ADMIN)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_DENIED);
+
+    existPlayer.password = undefined;
+
+    const accessToken = AuthUtil.createToken("accessToken", existPlayer);
+    const refreshToken = AuthUtil.createToken("refreshToken", existPlayer);
+
+    return HelperUtil.returnSuccessfulResult(res, {
+      player: existPlayer,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function registerForPlayer(req: Request, res: Response) {
+  try {
+    const { phone, username } = req.body;
+
+    if (!phone || !username)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existPlayer = await UserSchema.findOne({ phone });
+
+    if (existPlayer)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_EXISTED_USER);
+
+    const newPlayer = await new UserSchema({
+      phone,
+      username,
+    }).save();
+
+    console.log(newPlayer);
+
+    newPlayer.password = undefined;
+
+    const accessToken = AuthUtil.createToken("accessToken", newPlayer);
+    const refreshToken = AuthUtil.createToken("refreshToken", newPlayer);
+
+    return HelperUtil.returnSuccessfulResult(res, {
+      newPlayer,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function logoutForPlayer(req: Request, res: Response) {
+  try {
+    const { id } = req.body;
+
+    if (!id)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existPlayer = await UserSchema.findById(id);
+
+    if (!existPlayer)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_EXIST_ADMIN);
+
+    await UserSchema.findByIdAndUpdate(id, {
+      tokenVersion: (existPlayer.tokenVersion as number) + 1,
+    });
+
+    return HelperUtil.returnSuccessfulResult(res, {
+      message: "Player logged out",
     });
   } catch (error) {
     return HelperUtil.returnErrorResult(res, error);

@@ -12,6 +12,7 @@
 
 ## 2. How to view API document
 
-<b>Let's follow on this
-<a href="http://localhost:8081/api-docs">Link</a>
-</b>
+<li>1. Open new browser tab and enter <b>http://localhost:8081/api-docs</b></li>
+
+<li>2. (Must start server first) Let's follow on this
+<a target="_blank" href="http://localhost:8081/api-docs">Link</a></li>

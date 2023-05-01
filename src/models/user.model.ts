@@ -2,7 +2,13 @@ import mongoose, { ObjectId, Schema } from "mongoose";
 
 export enum EUserRole {
   ADMIN = "ADMIN",
+  MANAGER = "MANAGER",
   PLAYER = "PLAYER",
+}
+
+export enum EUserIsDeleted {
+  FALSE = 0,
+  TRUE = 1,
 }
 
 const userSchema = new Schema(
@@ -44,6 +50,12 @@ const userSchema = new Schema(
       enum: EUserRole,
       default: EUserRole.PLAYER,
     },
+    isDeleted: {
+      type: Boolean,
+      require: false,
+      enum: EUserIsDeleted,
+      default: EUserIsDeleted.FALSE,
+    },
   },
   {
     collection: "users",
@@ -62,6 +74,7 @@ export interface IUser {
   level?: number;
   tokenVersion?: number;
   role?: EUserRole;
-  registerDate: Date;
-  updatedAt: Date;
+  isDeleted?: EUserIsDeleted;
+  registerDate?: Date;
+  updatedAt?: Date;
 }

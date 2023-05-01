@@ -2,8 +2,45 @@ import { Request, Response } from "express";
 import { AuthUtil, HelperUtil } from "../utils";
 import { APIMessage } from "../constants";
 import { EUserRole, UserSchema } from "../models";
-import { sendRefreshToken } from "../utils/auth.util";
+import {
+  removeAdminSensitiveAttributes,
+  removePlayerSensitiveAttributes,
+  sendRefreshToken,
+} from "../utils/auth.util";
 import { hash, verify } from "argon2";
+import { Secret, verify as JWTVerify } from "jsonwebtoken";
+import { TAuthPayload } from "../types/auth.type";
+
+export async function checkSSOForAdmin(req: Request, res: Response) {
+  try {
+    const refreshToken =
+      req.cookies[process.env.E4K_REFRESH_TOKEN_NAME as string];
+
+    if (!refreshToken) return HelperUtil.returnUnauthorizedResult(res);
+
+    const decoded = JWTVerify(
+      refreshToken,
+      process.env.E4K_REFRESH_TOKEN_SECRET as Secret
+    ) as TAuthPayload;
+
+    const existUser = await UserSchema.findById(decoded.userId);
+
+    if (!existUser || existUser.tokenVersion !== decoded.tokenVersion)
+      return HelperUtil.returnUnauthorizedResult(res);
+
+    sendRefreshToken(res, existUser);
+
+    removeAdminSensitiveAttributes(existUser);
+
+    return HelperUtil.returnSuccessfulResult(res, {
+      user: existUser,
+      accessToken: AuthUtil.createToken("accessToken", existUser),
+    });
+  } catch (error) {
+    console.log(error);
+    return HelperUtil.returnUnauthorizedResult(res);
+  }
+}
 
 export async function loginForAdmin(req: Request, res: Response) {
   try {
@@ -20,16 +57,14 @@ export async function loginForAdmin(req: Request, res: Response) {
     if (!existUser)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_FAILED);
 
-    const isValidPassword = await verify(
-      existUser.password as string,
-      password
-    );
+    const isValidPassword = verify(existUser.password as string, password);
 
     if (!isValidPassword)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_FAILED);
 
-    existUser.password = undefined;
     sendRefreshToken(res, existUser);
+
+    removeAdminSensitiveAttributes(existUser);
 
     return HelperUtil.returnSuccessfulResult(res, {
       user: existUser,
@@ -42,30 +77,36 @@ export async function loginForAdmin(req: Request, res: Response) {
 
 export async function registerForAdmin(req: Request, res: Response) {
   try {
-    const { phone, password, username } = req.body;
+    const { userId, phone, password, username, role } = req.body;
 
-    if (!phone || !password || !username)
+    if (!phone || !password || !username || !role)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
-    const existAdmin = await UserSchema.findOne({
+    const requestCreator = await UserSchema.findById(userId);
+
+    if (requestCreator?.role !== EUserRole.ADMIN)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_PERMISSION);
+
+    const existUser = await UserSchema.findOne({
       phone,
     });
 
-    if (existAdmin)
+    if (existUser)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_EXIST_ADMIN);
 
     const hashedPassword = await hash(password);
 
-    const newAdmin = await new UserSchema({
+    const newUser = await new UserSchema({
       phone,
       password: hashedPassword,
       username,
+      role,
     }).save();
 
-    newAdmin.password = undefined;
+    newUser.password = undefined;
 
     return HelperUtil.returnSuccessfulResult(res, {
-      newAdmin,
+      newUser,
     });
   } catch (error: any) {
     return HelperUtil.returnErrorResult(res, error);
@@ -121,10 +162,10 @@ export async function loginForPlayer(req: Request, res: Response) {
     if (existPlayer.role === EUserRole.ADMIN)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_DENIED);
 
-    existPlayer.password = undefined;
-
     const accessToken = AuthUtil.createToken("accessToken", existPlayer);
     const refreshToken = AuthUtil.createToken("refreshToken", existPlayer);
+
+    removePlayerSensitiveAttributes(existPlayer);
 
     return HelperUtil.returnSuccessfulResult(res, {
       player: existPlayer,
@@ -153,12 +194,10 @@ export async function registerForPlayer(req: Request, res: Response) {
       username,
     }).save();
 
-    console.log(newPlayer);
-
-    newPlayer.password = undefined;
-
     const accessToken = AuthUtil.createToken("accessToken", newPlayer);
     const refreshToken = AuthUtil.createToken("refreshToken", newPlayer);
+
+    removePlayerSensitiveAttributes(newPlayer);
 
     return HelperUtil.returnSuccessfulResult(res, {
       newPlayer,
@@ -191,5 +230,35 @@ export async function logoutForPlayer(req: Request, res: Response) {
     });
   } catch (error) {
     return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function checkSSOForPlayer(req: Request, res: Response) {
+  try {
+    const refreshToken = req.body.refreshToken as string;
+
+    if (!refreshToken) return HelperUtil.returnUnauthorizedResult(res);
+
+    const decoded = JWTVerify(
+      refreshToken,
+      process.env.E4K_REFRESH_TOKEN_SECRET as Secret
+    ) as TAuthPayload;
+
+    const existPlayer = await UserSchema.findById(decoded.userId);
+
+    if (!existPlayer || existPlayer.tokenVersion !== decoded.tokenVersion)
+      return HelperUtil.returnUnauthorizedResult(res);
+
+    sendRefreshToken(res, existPlayer);
+
+    removePlayerSensitiveAttributes(existPlayer);
+
+    return HelperUtil.returnSuccessfulResult(res, {
+      user: existPlayer,
+      accessToken: AuthUtil.createToken("accessToken", existPlayer),
+    });
+  } catch (error) {
+    console.log(error);
+    return HelperUtil.returnUnauthorizedResult(res);
   }
 }

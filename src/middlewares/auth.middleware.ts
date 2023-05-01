@@ -3,6 +3,7 @@ import { verify } from "jsonwebtoken";
 import { AuthType } from "../types";
 import { HelperUtil } from "../utils";
 import { UserSchema } from "../models";
+import { APIMessage } from "../constants";
 
 export async function checkAuth(
   req: Request,
@@ -13,14 +14,15 @@ export async function checkAuth(
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token)
-    return res.status(401).json({
-      noti: "Auth token not found",
-    });
+    return HelperUtil.returnUnauthorizedResult(
+      res,
+      APIMessage.ERR_AUTH_TOKEN_NOT_FOUND
+    );
 
   try {
     const { userId, phone } = verify(
       token,
-      process.env.ACCESS_TOKEN_SECRET as string
+      process.env.E4K_ACCESS_TOKEN_SECRET as string
     ) as AuthType.TAuthPayload;
 
     const existUser = await UserSchema.findById(userId);

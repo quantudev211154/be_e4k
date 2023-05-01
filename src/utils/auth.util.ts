@@ -6,6 +6,7 @@ export function createToken(type: "accessToken" | "refreshToken", user: IUser) {
   return sign(
     {
       userId: user._id,
+      phone: user.phone,
       role: user.role,
       ...(type === "refreshToken" ? { tokenVersion: user.tokenVersion } : {}),
     },
@@ -26,4 +27,20 @@ export function sendRefreshToken(res: Response, user: IUser) {
       maxAge: 24 * 60 * 60 * 1000,
     }
   );
+}
+
+export function removeAdminSensitiveAttributes(admin: IUser) {
+  admin.password = undefined;
+  admin.isDeleted = undefined;
+  admin.tokenVersion = undefined;
+  admin.updatedAt = undefined;
+  admin.weeklyScore = undefined;
+  admin.level = undefined;
+}
+
+export function removePlayerSensitiveAttributes(player: IUser) {
+  player.password = undefined;
+  player.isDeleted = undefined;
+  player.tokenVersion = undefined;
+  player.updatedAt = undefined;
 }

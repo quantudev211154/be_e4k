@@ -2,7 +2,8 @@
  * For all APIs
  */
 export const ERR_MISSING_PARAMS = "Some params is missing";
-
+export const ERR_NO_PERMISSION = "No permission to do this request";
+export const ERR_AUTH_TOKEN_NOT_FOUND = "Auth token not found";
 /**
  * For auth route
  */

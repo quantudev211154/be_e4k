@@ -25,6 +25,8 @@ export function returnErrorResult(
 }
 
 export function returnUnauthorizedResult(response: Response, message?: string) {
+  response.clearCookie(process.env.E4K_REFRESH_TOKEN_NAME as string);
+
   return response.status(401).json({
     success: false,
     message: message ? message : "Unauthorized error",

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HelperUtil } from "../utils";
 import { APIMessage } from "../constants";
-import { UserSchema } from "../models";
+import { EUserRole, UserSchema } from "../models";
 import { TPublicUser } from "../types/user.type";
 
 export async function searchUserByPhone(req: Request, res: Response) {
@@ -15,6 +15,13 @@ export async function searchUserByPhone(req: Request, res: Response) {
       );
 
     const existUser = await UserSchema.findOne({ phone });
+
+    if (existUser && existUser?.role !== EUserRole.PLAYER)
+      return HelperUtil.returnErrorResult(
+        res,
+        APIMessage.ERR_INVALID_LOGIN_TYPE,
+        403
+      );
 
     if (!existUser)
       return HelperUtil.returnErrorResult(

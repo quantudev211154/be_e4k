@@ -54,6 +54,8 @@ const router = express.Router();
  *                      username:
  *                          type: string
  *                          example: Test player
+ *       403:
+ *         description: Phone was registered for ADMIN role, but API calls check user API for PLAYER role
  *       500:
  *         description: Missing phone or username | Phone was used by another player
  */

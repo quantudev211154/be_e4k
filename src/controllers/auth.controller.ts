@@ -200,7 +200,7 @@ export async function registerForPlayer(req: Request, res: Response) {
     removePlayerSensitiveAttributes(newPlayer);
 
     return HelperUtil.returnSuccessfulResult(res, {
-      newPlayer,
+      player: newPlayer,
       accessToken,
       refreshToken,
     });

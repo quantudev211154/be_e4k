@@ -32,3 +32,6 @@ export const ERR_NO_EXIST_ADMIN = "This admin is not exist";
  * For Course route
  */
 export const ERR_NO_COURSE_FOUND = "No course found";
+
+export const ERR_INVALID_LOGIN_TYPE =
+  "Phone was registered for ADMIN role. Can not use this phone for PLAYER role.";

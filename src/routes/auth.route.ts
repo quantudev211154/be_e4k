@@ -58,29 +58,31 @@ router.post("/admin/logout", AuthController.logoutForAdmin);
  *                   example: true
  *                 data:
  *                   type: object
- *                   description: Player info
  *                   properties:
- *                      _id:
- *                          type: string
- *                          example: 644ea83e19b58c0a59a4e788
- *                      phone:
- *                          type: string
- *                          example: 0358434916
- *                      username:
- *                          type: string
- *                          example: Test player
- *                      weeklyScore:
- *                          type: integer
- *                          example: 0
- *                      level:
- *                          type: integer
- *                          example: 0
- *                      role:
- *                          type: string
- *                          example: PLAYER
- *                      registerDate:
- *                          type: Date
- *                          example: 2023-04-30T17:41:18.167Z
+ *                      player:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: 0358434916
+ *                              username:
+ *                                  type: string
+ *                                  example: Test player
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              level:
+ *                                  type: integer
+ *                                  example: 0
+ *                              role:
+ *                                  type: string
+ *                                  example: PLAYER
+ *                              registerDate:
+ *                                  type: Date
+ *                                  example: 2023-04-30T17:41:18.167Z
  *                 accessToken:
  *                      type: string
  *                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDRlYTgzZTE5YjU4YzBhNTlhNGU3ODgiLCJyb2xlIjoiUExBWUVSIiwiaWF0IjoxNjgyODc4ODA4LCJleHAiOjE2ODI4ODA2MDh9.9uiHTAYLtKjcYJPjtA5stSGKNXwnScDJvMOMnYW2u74
@@ -128,29 +130,31 @@ router.post("/player/login", AuthController.loginForPlayer);
  *                   example: true
  *                 data:
  *                   type: object
- *                   description: Player info
  *                   properties:
- *                      _id:
- *                          type: string
- *                          example: 644ea83e19b58c0a59a4e788
- *                      phone:
- *                          type: string
- *                          example: 0358434916
- *                      username:
- *                          type: string
- *                          example: Test player
- *                      weeklyScore:
- *                          type: integer
- *                          example: 0
- *                      level:
- *                          type: integer
- *                          example: 0
- *                      role:
- *                          type: string
- *                          example: PLAYER
- *                      registerDate:
- *                          type: Date
- *                          example: 2023-04-30T17:41:18.167Z
+ *                      player:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: '0358434916'
+ *                              username:
+ *                                  type: string
+ *                                  example: Test player
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              level:
+ *                                  type: integer
+ *                                  example: 0
+ *                              role:
+ *                                  type: string
+ *                                  example: PLAYER
+ *                              registerDate:
+ *                                  type: Date
+ *                                  example: 2023-04-30T17:41:18.167Z
  *                 accessToken:
  *                      type: string
  *                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDRlYTgzZTE5YjU4YzBhNTlhNGU3ODgiLCJyb2xlIjoiUExBWUVSIiwiaWF0IjoxNjgyODc4ODA4LCJleHAiOjE2ODI4ODA2MDh9.9uiHTAYLtKjcYJPjtA5stSGKNXwnScDJvMOMnYW2u74
@@ -194,7 +198,6 @@ router.post("/player/register", AuthController.registerForPlayer);
  *                   example: true
  *                 data:
  *                   type: object
- *                   description: Player info
  *                   properties:
  *                      message:
  *                          type: string
@@ -236,29 +239,31 @@ router.post("/player/logout", AuthController.logoutForPlayer);
  *                   example: true
  *                 data:
  *                   type: object
- *                   description: Player info
  *                   properties:
- *                      _id:
- *                          type: string
- *                          example: 644ea83e19b58c0a59a4e788
- *                      phone:
- *                          type: string
- *                          example: 0358434916
- *                      username:
- *                          type: string
- *                          example: Test player
- *                      weeklyScore:
- *                          type: integer
- *                          example: 0
- *                      level:
- *                          type: integer
- *                          example: 0
- *                      role:
- *                          type: string
- *                          example: PLAYER
- *                      registerDate:
- *                          type: Date
- *                          example: 2023-04-30T17:41:18.167Z
+ *                      player:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: '0358434916'
+ *                              username:
+ *                                  type: string
+ *                                  example: Test player
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              level:
+ *                                  type: integer
+ *                                  example: 0
+ *                              role:
+ *                                  type: string
+ *                                  example: PLAYER
+ *                              registerDate:
+ *                                  type: Date
+ *                                  example: 2023-04-30T17:41:18.167Z
  *                 accessToken:
  *                      type: string
  *                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDUwM2EzNGIwNjJiNThjYTJjNmQwMzkiLCJwaG9uZSI6IjAwMDAwMDAwMDAiLCJyb2xlIjoiUExBWUVSIiwiaWF0IjoxNjgyOTc5NDU2LCJleHAiOjE2ODI5ODEyNTZ9.DsDjJ4qOzia9vzEWcD0xIj5-Y8ehkK3UkszxsxZjPk8

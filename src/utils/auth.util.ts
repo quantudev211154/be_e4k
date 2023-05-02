@@ -13,7 +13,7 @@ export function createToken(type: "accessToken" | "refreshToken", user: IUser) {
     type === "accessToken"
       ? (process.env.E4K_ACCESS_TOKEN_SECRET as Secret)
       : (process.env.E4K_REFRESH_TOKEN_SECRET as Secret),
-    { expiresIn: type === "accessToken" ? "30min" : "3d" }
+    { expiresIn: type === "accessToken" ? "1d" : "3d" }
   );
 }
 

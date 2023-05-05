@@ -19,8 +19,7 @@ const courseSchema = new Schema(
     },
     description: {
       type: String,
-      require: false,
-      default: "",
+      require: true,
     },
     creator: {
       type: Schema.Types.ObjectId,

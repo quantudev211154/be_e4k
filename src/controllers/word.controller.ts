@@ -15,7 +15,7 @@ export async function getAllWords(req: Request, res: Response) {
 
 export async function addNewWord(req: Request, res: Response) {
   try {
-    const { engVer, vieVers, level, images, audios, userId } = req.body;
+    const { engVer, vieVers, images, audios, userId } = req.body;
 
     if (!engVer || !vieVers || vieVers.length === 0)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
@@ -24,9 +24,8 @@ export async function addNewWord(req: Request, res: Response) {
       engVer,
       vieVers,
       creator: userId,
-      ...(level ? level : {}),
-      ...(images ? images : {}),
-      ...(audios ? audios : {}),
+      ...(images ? { images } : {}),
+      ...(audios ? { audios } : {}),
     }).save();
 
     return HelperUtil.returnSuccessfulResult(res, { newWord });

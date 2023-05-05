@@ -28,18 +28,24 @@ export async function getCourseByCourseId(req: Request, res: Response) {
   }
 }
 
-export async function createCourse(req: Request, res: Response) {
+export async function createDraftCourse(req: Request, res: Response) {
   try {
-    const newCourse = req.body.newCourse;
+    const { title, description, userId } = req.body;
 
-    if (!newCourse)
+    console.log(title, description, userId);
+
+    if (!title || !description)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
-    const createdCourse = await new CourseSchema(newCourse).save();
+    const createdCourse = await new CourseSchema({
+      title,
+      description,
+      creator: userId,
+    }).save();
 
     return HelperUtil.returnSuccessfulResult(
       res,
-      { newCourse: createCourse },
+      { newCourse: createdCourse },
       APIMessage.SUC_NEW_USER_CREATED
     );
   } catch (error) {

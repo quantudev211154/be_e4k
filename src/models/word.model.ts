@@ -1,4 +1,5 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
+import { IUser } from "./user.model";
 
 export enum EWordLevel {
   EASY = "EASY",
@@ -8,8 +9,12 @@ export enum EWordLevel {
 
 const wordSchema = new Schema(
   {
-    content: {
+    engVer: {
       type: String,
+      require: true,
+    },
+    vieVers: {
+      type: [String],
       require: true,
     },
     level: {
@@ -28,6 +33,11 @@ const wordSchema = new Schema(
       require: false,
       default: [],
     },
+    creator: {
+      type: Schema.Types.ObjectId,
+      require: true,
+      ref: "User",
+    },
   },
   {
     collection: "words",
@@ -39,10 +49,12 @@ export const WordSchema = mongoose.model<IWord>("Word", wordSchema);
 
 export interface IWord {
   _id: ObjectId;
-  content: string;
+  engVer: string;
+  vieVers: string[];
   level: EWordLevel;
   images: string[];
   audios: string[];
+  creator: IUser;
   createdAt: Date;
   updatedAt: Date;
 }

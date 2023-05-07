@@ -8,7 +8,7 @@ const router = express.Router();
  *@swagger
  * tags:
  *      name: course/player
- *      description:Contains all API for course (PLAYER side)
+ *      description: Contains all API for course (PLAYER side)
  */
 
 /**
@@ -50,10 +50,16 @@ const router = express.Router();
  *                                  createdAt:
  *                                      type: Date
  *                                      example: 2023-05-07T03:45:42.746Z
+ *                                  currentLevel:
+ *                                      type: integer
+ *                                      example: 0
+ *                                  totalLevel:
+ *                                      type: integer
+ *                                      example: 1
  *       500:
  *         description: Missing phone or username | Phone was used by another player
  */
-router.get("/player", checkAuth, CourseController.getAllCourseForPlayer);
+router.get("/player", CourseController.getAllCourseForPlayer);
 
 router.get("/", checkAuth, CourseController.getAllCourseFor);
 router.get("/:id", checkAuth, CourseController.getCourseByCourseId);

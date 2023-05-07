@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HelperUtil } from "../utils";
-import { CourseSchema } from "../models";
+import { CourseSchema, DiarySchema } from "../models";
 import { APIMessage } from "../constants";
 
 export async function getAllCourseFor(req: Request, res: Response) {
@@ -78,8 +78,10 @@ export async function deleteCourseByCourseId(req: Request, res: Response) {
 
 export async function getAllCourseForPlayer(req: Request, res: Response) {
   try {
-    const courses = await CourseSchema.find().select([
-      "-lessions",
+    let courses: any;
+
+    const foundCourses = await CourseSchema.find().select([
+      "-lessions.rounds",
       "-level",
       "-creator",
       "-isDeleted",
@@ -87,6 +89,36 @@ export async function getAllCourseForPlayer(req: Request, res: Response) {
       "-updatedAt",
       "-type",
     ]);
+
+    courses = [...foundCourses];
+
+    for (let i = 0; i < courses.length; ++i) {
+      const diary = await DiarySchema.findOne({
+        "courses.course": courses[i]._id,
+      });
+      let currentLevel = 0;
+
+      if (!diary) {
+        currentLevel = 0;
+      } else {
+        const targetCourseInDiary = diary.courses.find(
+          (item) => item._id === courses[i]._id
+        );
+
+        if (!targetCourseInDiary) currentLevel = 0;
+        else currentLevel = targetCourseInDiary.lessions.length;
+      }
+
+      const courseLessionNumber = courses[i].lessions.length;
+
+      courses[i] = {
+        ...courses[i]._doc,
+        currentLevel,
+        totalLevel: courseLessionNumber,
+      };
+
+      courses[i].lessions = undefined;
+    }
 
     return HelperUtil.returnSuccessfulResult(res, { courses });
   } catch (error) {

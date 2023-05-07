@@ -27,6 +27,11 @@ const diarySchema = new Schema(
               type: Schema.Types.ObjectId,
               require: true,
             },
+            rounds: {
+              type: [Schema.Types.ObjectId],
+              require: false,
+              default: [],
+            },
             isCompleted: {
               type: Boolean,
               require: false,
@@ -47,7 +52,9 @@ export const DiarySchema = mongoose.model<IDiary>("Diary", diarySchema);
 
 export interface IDiaryLession {
   _id: ObjectId;
-  lession: ILession;
+  lession: ObjectId;
+  rounds: ObjectId[];
+  score: number;
   isCompleted: false;
 }
 

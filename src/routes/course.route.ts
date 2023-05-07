@@ -8,7 +8,7 @@ const router = express.Router();
  *@swagger
  * tags:
  *      name: course/player
- *      description: Contains all authentication route for PLAYER (login, register, logout)
+ *      description:Contains all API for course (PLAYER side)
  */
 
 /**

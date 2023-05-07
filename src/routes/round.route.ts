@@ -4,6 +4,6 @@ import { RoundController } from "../controllers";
 
 const router = express.Router();
 
-router.post("/:courseId/:lessionId", checkAuth, RoundController.createNewRound);
+router.post("/:courseId/:lessionId", RoundController.createNewRound);
 
 export default router;

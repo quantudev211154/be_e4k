@@ -12,14 +12,14 @@ export async function getLessionById(req: Request, res: Response) {
 
     const course = await CourseSchema.findById(courseId);
 
-    const lession = course?.lessions.find(
+    const lessions = course?.lessions.find(
       (lession) => lession._id.toString() == lessionId
     );
 
-    if (!lession)
+    if (!lessions)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_LESSION_FOUND);
 
-    return HelperUtil.returnSuccessfulResult(res, { lession });
+    return HelperUtil.returnSuccessfulResult(res, { lessions });
   } catch (error: any) {
     return HelperUtil.returnErrorResult(res, error);
   }
@@ -58,6 +58,30 @@ export async function createNewLession(req: Request, res: Response) {
       updatedCourse,
       latestLession,
     });
+  } catch (error: any) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function getAllLessionByCourseId(req: Request, res: Response) {
+  try {
+    const { courseId } = req.params;
+
+    if (!courseId)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const course = await CourseSchema.findById(courseId).select([
+      "-lessions.level",
+      "-lessions.type",
+      "-lessions.creator",
+    ]);
+
+    if (!course)
+      HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_COURSE_FOUND);
+
+    const lession = course?.lessions;
+
+    return HelperUtil.returnSuccessfulResult(res, { lession });
   } catch (error: any) {
     return HelperUtil.returnErrorResult(res, error);
   }

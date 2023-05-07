@@ -3,7 +3,7 @@ import { HelperUtil } from "../utils";
 import { CourseSchema } from "../models";
 import { APIMessage } from "../constants";
 
-export async function getAllCourse(req: Request, res: Response) {
+export async function getAllCourseFor(req: Request, res: Response) {
   try {
     const courses = await CourseSchema.find({});
 
@@ -67,6 +67,28 @@ export async function deleteCourseByCourseId(req: Request, res: Response) {
     return HelperUtil.returnSuccessfulResult(res, {
       deletedCourse: targetCourse,
     });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+/**
+ * FOR PLAYER
+ */
+
+export async function getAllCourseForPlayer(req: Request, res: Response) {
+  try {
+    const courses = await CourseSchema.find().select([
+      "-lessions",
+      "-level",
+      "-creator",
+      "-isDeleted",
+      "-deletedBy",
+      "-updatedAt",
+      "-type",
+    ]);
+
+    return HelperUtil.returnSuccessfulResult(res, { courses });
   } catch (error) {
     return HelperUtil.returnErrorResult(res, error);
   }

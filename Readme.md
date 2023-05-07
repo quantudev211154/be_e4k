@@ -7,6 +7,7 @@
 <li><b>Step 3: </b>Enter "npm i" and wait until all dependencies are downloaded.</li>
 <li><b>Step 3: </b>Double click on file "runnner.cmd" to start</li>
 <li><b>Step 4: </b>Follow step 2 to know that how to access API documentation</li>
+<li><b>Step 5: </b>Server runs on http://localhost:8081</li>
 
 </br>
 

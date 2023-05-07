@@ -2,13 +2,6 @@ import express from "express";
 import { AuthController } from "../controllers";
 import { checkAuth } from "../middlewares/auth.middleware";
 
-/**
- *@swagger
- * tags:
- *      name: auth/admin
- *      description: Contains all authentication route for ADMIN (login, register, logout)
- */
-
 const router = express.Router();
 
 /**

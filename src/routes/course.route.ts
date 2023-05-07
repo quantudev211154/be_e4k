@@ -59,7 +59,7 @@ const router = express.Router();
  *       500:
  *         description: Missing phone or username | Phone was used by another player
  */
-router.get("/player", CourseController.getAllCourseForPlayer);
+router.get("/player", checkAuth, CourseController.getAllCourseForPlayer);
 
 router.get("/", checkAuth, CourseController.getAllCourseFor);
 router.get("/:id", checkAuth, CourseController.getCourseByCourseId);

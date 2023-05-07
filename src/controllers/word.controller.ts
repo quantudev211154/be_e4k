@@ -59,18 +59,23 @@ export async function addNewWord(req: Request, res: Response) {
   }
 }
 
-export async function searchWordsByKeyWord(req: Request, res: Response) {
+export function searchWordsByKeyWord(req: Request, res: Response) {
   try {
     const { keyword } = req.body;
 
     if (!keyword)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
-    const words = await WordSchema.find({
-      engVer: { $regex: keyword },
-    }).limit(5);
-
-    return HelperUtil.returnSuccessfulResult(res, { words });
+    Promise.all([
+      WordSchema.find({ engVer: keyword }).limit(2),
+      WordSchema.find({
+        engVer: { $regex: ".*" + keyword + ".*", $options: "i" },
+      }).limit(3),
+    ]).then(([equalWords, relativeWords]) => {
+      return HelperUtil.returnSuccessfulResult(res, {
+        words: [...equalWords, ...relativeWords],
+      });
+    });
   } catch (error) {
     return HelperUtil.returnErrorResult(res, error);
   }

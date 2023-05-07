@@ -35,3 +35,5 @@ export const ERR_NO_COURSE_FOUND = "No course found";
 
 export const ERR_INVALID_LOGIN_TYPE =
   "Phone was registered for ADMIN role. Can not use this phone for PLAYER role.";
+
+export const ERR_NO_LESSION_FOUND = "No lession found";

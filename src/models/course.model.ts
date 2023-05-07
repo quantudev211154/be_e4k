@@ -21,6 +21,11 @@ const courseSchema = new Schema(
       type: String,
       require: true,
     },
+    level: {
+      type: Number,
+      require: false,
+      default: null,
+    },
     creator: {
       type: Schema.Types.ObjectId,
       require: true,
@@ -50,59 +55,16 @@ const courseSchema = new Schema(
           require: false,
           default: ECLRStatus.DRAFT,
         },
-        rounds: [
-          {
-            title: {
-              type: String,
-              require: true,
-            },
-            playType: {
-              type: Number,
-              require: true,
-              enum: CourseConstant.ERoundPlayType,
-            },
-            type: {
-              type: String,
-              enum: ECLRStatus,
-              require: false,
-              default: ECLRStatus.DRAFT,
-            },
-            score: {
-              type: Number,
-              require: false,
-              default: CourseConstant.LESSION_STANDART_SCORE,
-            },
-            audio: [
-              {
-                url: {
-                  type: String,
-                  require: true,
-                },
-              },
-            ],
-            images: [
-              {
-                url: {
-                  type: String,
-                  require: true,
-                },
-              },
-            ],
-            word: [
-              {
-                content: {
-                  type: String,
-                  require: true,
-                },
-                word: {
-                  type: Schema.Types.ObjectId,
-                  require: true,
-                  ref: "Word",
-                },
-              },
-            ],
-          },
-        ],
+        level: {
+          type: Number,
+          require: false,
+          default: null,
+        },
+        rounds: {
+          type: [Object],
+          require: false,
+          default: [],
+        },
         creator: {
           type: Schema.Types.ObjectId,
           require: true,
@@ -130,33 +92,6 @@ const courseSchema = new Schema(
 
 export const CourseSchema = mongoose.model<ICourse>("Course", courseSchema);
 
-export interface IRoundAudio {
-  _id: ObjectId;
-  url: string;
-}
-
-export interface IRoundImage {
-  _id: ObjectId;
-  url: string;
-}
-
-export interface IRoundWord {
-  _id: ObjectId;
-  content: string;
-  word: IWord;
-}
-
-export interface IRound {
-  _id: ObjectId;
-  title: string;
-  type: ECLRStatus;
-  playType: CourseConstant.ERoundPlayType;
-  score: number;
-  audio: IRoundAudio[];
-  images: IRoundImage[];
-  words: IRoundWord[];
-}
-
 /**
  * Ech object children in Array will be allocated a _id
  */
@@ -164,9 +99,10 @@ export interface ILession {
   _id: ObjectId;
   title: string;
   type: ECLRStatus;
+  level: number;
   description: string;
   creator: IUser;
-  rounds: IRound[];
+  rounds: any[];
 }
 
 export interface ICourse {
@@ -175,6 +111,7 @@ export interface ICourse {
   description?: string;
   creator: IUser;
   type: ECLRStatus;
+  level: number;
   lessions: ILession[];
   isDeleted?: boolean;
   deletedBy?: IUser;

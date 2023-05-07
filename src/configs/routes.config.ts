@@ -3,7 +3,9 @@ import {
   AuthRouter,
   CourseRouter,
   DiaryRouter,
+  LessionRouter,
   PublicRouter,
+  RoundRouter,
   UserRouter,
   WordRouter,
 } from "../routes";
@@ -12,6 +14,8 @@ export default function (app: Express) {
   app.use("/api/auth", AuthRouter);
   app.use("/api/public", PublicRouter);
   app.use("/api/course", CourseRouter);
+  app.use("/api/lession", LessionRouter);
+  app.use("/api/round", RoundRouter);
   app.use("/api/diary", DiaryRouter);
   app.use("/api/user", UserRouter);
   app.use("/api/word", WordRouter);

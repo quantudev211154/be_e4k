@@ -8,6 +8,7 @@ import {
   sys,
 } from "./configs";
 import * as dotenv from "dotenv";
+import { importEnglishDataToDB } from "./utils/dic.util";
 
 const app = express();
 app.use(express.json());

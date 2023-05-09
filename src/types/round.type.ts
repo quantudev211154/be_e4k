@@ -34,7 +34,6 @@ export interface IType2Card extends IBaseCard {
 
 export interface IRoundType2 extends IBaseRound {
   question: string; // may be english, vietnamese, audio,
-  isAudio: boolean;
   correctAns: string;
   cards: IType2Card[];
 }

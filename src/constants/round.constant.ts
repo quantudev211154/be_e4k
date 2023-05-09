@@ -1,4 +1,4 @@
-import { IRoundType1 } from "../types";
+import { IRoundType1, IRoundType2, IRoundType3 } from "../types";
 
 export const PLAY_TYPE_1 = 1;
 export const PLAY_TYPE_2 = 2;
@@ -24,4 +24,21 @@ export const ROUND_TYPE_1_INIT_VALUE: IRoundType1 = {
   allowedMoves: PLAY_TYPE_1_ALLOWED_MOVES,
   cards: [],
   totalPairs: 2,
+};
+
+export const ROUND_TYPE_2_INIT_VALUE: IRoundType2 = {
+  playType: PLAY_TYPE_2,
+  score: PLAY_TYPE_2_SCORE,
+  correctAns: "",
+  question: "",
+  cards: [],
+};
+
+export const ROUND_TYPE_3_INIT_VALUE: IRoundType3 = {
+  playType: PLAY_TYPE_3,
+  correctAns: "",
+  isAudio: false,
+  question: "",
+  randomWords: [],
+  score: PLAY_TYPE_3_SCORE,
 };

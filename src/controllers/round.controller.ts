@@ -7,10 +7,12 @@ import {
   PLAY_TYPE_2,
   PLAY_TYPE_3,
   PLAY_TYPE_4,
+  PLAY_TYPE_5,
   ROUND_TYPE_1_INIT_VALUE,
   ROUND_TYPE_2_INIT_VALUE,
   ROUND_TYPE_3_INIT_VALUE,
   ROUND_TYPE_4_INIT_VALUE,
+  ROUND_TYPE_5_INIT_VALUE,
 } from "../constants/round.constant";
 
 function convertNewRoundByRoundType(round: any) {
@@ -35,6 +37,11 @@ function convertNewRoundByRoundType(round: any) {
   } else if (roundPlayType === PLAY_TYPE_4) {
     convertedRound = {
       ...ROUND_TYPE_4_INIT_VALUE,
+      ...round,
+    };
+  } else if (roundPlayType === PLAY_TYPE_5) {
+    convertedRound = {
+      ...ROUND_TYPE_5_INIT_VALUE,
       ...round,
     };
   }

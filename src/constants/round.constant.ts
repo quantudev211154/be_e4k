@@ -1,4 +1,10 @@
-import { IRoundType1, IRoundType2, IRoundType3, IRoundType4 } from "../types";
+import {
+  IRoundType1,
+  IRoundType2,
+  IRoundType3,
+  IRoundType4,
+  IRoundType5,
+} from "../types";
 
 export const PLAY_TYPE_1 = 1;
 export const PLAY_TYPE_2 = 2;
@@ -48,4 +54,13 @@ export const ROUND_TYPE_4_INIT_VALUE: IRoundType4 = {
   score: PLAY_TYPE_4_SCORE,
   correctAns: "",
   question: "",
+};
+
+export const ROUND_TYPE_5_INIT_VALUE: IRoundType5 = {
+  correctAns: "",
+  cards: [],
+  isAudio: true,
+  playType: PLAY_TYPE_5,
+  question: "",
+  score: PLAY_TYPE_5_SCORE,
 };

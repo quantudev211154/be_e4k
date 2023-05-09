@@ -1,4 +1,4 @@
-import { IRoundType1, IRoundType2, IRoundType3 } from "../types";
+import { IRoundType1, IRoundType2, IRoundType3, IRoundType4 } from "../types";
 
 export const PLAY_TYPE_1 = 1;
 export const PLAY_TYPE_2 = 2;
@@ -41,4 +41,11 @@ export const ROUND_TYPE_3_INIT_VALUE: IRoundType3 = {
   question: "",
   randomWords: [],
   score: PLAY_TYPE_3_SCORE,
+};
+
+export const ROUND_TYPE_4_INIT_VALUE: IRoundType4 = {
+  playType: PLAY_TYPE_4,
+  score: PLAY_TYPE_4_SCORE,
+  correctAns: "",
+  question: "",
 };

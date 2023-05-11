@@ -4,6 +4,7 @@ import {
   IRoundType3,
   IRoundType4,
   IRoundType5,
+  IRoundType6,
 } from "../types";
 
 export const PLAY_TYPE_1 = 1;
@@ -63,4 +64,10 @@ export const ROUND_TYPE_5_INIT_VALUE: IRoundType5 = {
   playType: PLAY_TYPE_5,
   question: "",
   score: PLAY_TYPE_5_SCORE,
+};
+
+export const ROUND_TYPE_6_INIT_VALUE: IRoundType6 = {
+  playType: PLAY_TYPE_6,
+  score: PLAY_TYPE_6_SCORE,
+  cards: [],
 };

@@ -25,6 +25,8 @@ export const PLAY_TYPE_4_SCORE = BASE_PLAY_TYPE_SCORE * 4;
 export const PLAY_TYPE_5_SCORE = BASE_PLAY_TYPE_SCORE * 5;
 export const PLAY_TYPE_6_SCORE = BASE_PLAY_TYPE_SCORE * 6;
 
+export const PLAY_TYPE_6_ALLOWED_MOVES = 3;
+
 export const ROUND_TYPE_1_INIT_VALUE: IRoundType1 = {
   playType: PLAY_TYPE_1,
   score: PLAY_TYPE_1_SCORE,
@@ -70,4 +72,5 @@ export const ROUND_TYPE_6_INIT_VALUE: IRoundType6 = {
   playType: PLAY_TYPE_6,
   score: PLAY_TYPE_6_SCORE,
   cards: [],
+  allowedMoves: PLAY_TYPE_6_ALLOWED_MOVES,
 };

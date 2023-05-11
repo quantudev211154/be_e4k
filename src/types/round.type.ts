@@ -85,4 +85,5 @@ export interface IType6Card extends IBaseCard {
 
 export interface IRoundType6 extends IBaseRound {
   cards: IType6Card[]; // even position: isAudio = false, odd position: isAudio = true
+  allowedMoves: number; // BE defines this prop
 }

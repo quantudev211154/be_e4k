@@ -23,9 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RoundConstant = exports.WordConstant = exports.CourseConstant = exports.APIMessage = exports.DBConstant = void 0;
+exports.UserConstant = exports.RoundConstant = exports.WordConstant = exports.CourseConstant = exports.APIMessage = exports.DBConstant = void 0;
 exports.DBConstant = __importStar(require("./db.constant"));
 exports.APIMessage = __importStar(require("./apiMessage.constant"));
 exports.CourseConstant = __importStar(require("./course.constant"));
 exports.WordConstant = __importStar(require("./word.constant"));
 exports.RoundConstant = __importStar(require("./round.constant"));
+exports.UserConstant = __importStar(require("./user.constant"));

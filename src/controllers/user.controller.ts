@@ -1,8 +1,14 @@
 import { Request, Response } from "express";
 import { HelperUtil } from "../utils";
-import { UserSchema } from "../models";
+import { IUser, UserSchema } from "../models";
 import { APIMessage } from "../constants";
 import { removePlayerSensitiveAttributes } from "../utils/auth.util";
+import {
+  GOLD_FOR_BUY_3_HEARTS,
+  GOLD_FOR_BUY_5_HEARTS,
+  MAXIMUM_HEARTS,
+  MINIMUM_HEARTS_BUY_QTY,
+} from "../constants/user.constant";
 
 export async function register(req: Request, res: Response) {
   try {
@@ -140,6 +146,72 @@ export async function getUserInfo(req: Request, res: Response) {
 
     return HelperUtil.returnSuccessfulResult(res, { user });
   } catch (error) {
-    HelperUtil.returnErrorResult(res, error);
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function buyHearts(req: Request, res: Response) {
+  try {
+    const { userId } = req.body;
+    const hearts = parseInt(req.body.hearts);
+
+    if (!hearts || !userId)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existUser = await UserSchema.findById(userId);
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    if (existUser.hearts === 5)
+      return HelperUtil.returnErrorResult(
+        res,
+        "Hearts of this user is hit maximum. Can not buy more."
+      );
+
+    let updatedUser;
+
+    const userGolds = existUser.golds as number;
+    const userHearts = existUser.hearts as number;
+
+    if (hearts === MINIMUM_HEARTS_BUY_QTY) {
+      if (userGolds < GOLD_FOR_BUY_3_HEARTS) {
+        return HelperUtil.returnErrorResult(
+          res,
+          "No enough golds to buy hearts."
+        );
+      }
+
+      const userUpdater = {
+        hearts:
+          MINIMUM_HEARTS_BUY_QTY + userHearts > MAXIMUM_HEARTS
+            ? MAXIMUM_HEARTS
+            : MINIMUM_HEARTS_BUY_QTY + userHearts,
+        golds: userGolds - GOLD_FOR_BUY_3_HEARTS,
+      };
+      updatedUser = await UserSchema.findByIdAndUpdate(userId, userUpdater, {
+        new: true,
+      });
+    } else if (hearts === MAXIMUM_HEARTS) {
+      if (userGolds < GOLD_FOR_BUY_5_HEARTS)
+        return HelperUtil.returnErrorResult(
+          res,
+          "No enough golds to buy hearts."
+        );
+
+      const userUpdater = {
+        hearts: MAXIMUM_HEARTS,
+        golds: userGolds - GOLD_FOR_BUY_5_HEARTS,
+      };
+      updatedUser = await UserSchema.findByIdAndUpdate(userId, userUpdater, {
+        new: true,
+      });
+    }
+
+    removePlayerSensitiveAttributes(updatedUser as IUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { updatedUser });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
   }
 }

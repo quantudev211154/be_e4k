@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
+exports.buyHearts = exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
 const utils_1 = require("../utils");
 const models_1 = require("../models");
 const constants_1 = require("../constants");
 const auth_util_1 = require("../utils/auth.util");
+const user_constant_1 = require("../constants/user.constant");
 function register(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -110,8 +111,57 @@ function getUserInfo(req, res) {
             return utils_1.HelperUtil.returnSuccessfulResult(res, { user });
         }
         catch (error) {
-            utils_1.HelperUtil.returnErrorResult(res, error);
+            return utils_1.HelperUtil.returnErrorResult(res, error);
         }
     });
 }
 exports.getUserInfo = getUserInfo;
+function buyHearts(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { userId } = req.body;
+            const hearts = parseInt(req.body.hearts);
+            if (!hearts || !userId)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_MISSING_PARAMS);
+            const existUser = yield models_1.UserSchema.findById(userId);
+            if (!existUser)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_NO_USER_FOUND);
+            if (existUser.hearts === 5)
+                return utils_1.HelperUtil.returnErrorResult(res, "Hearts of this user is hit maximum. Can not buy more.");
+            let updatedUser;
+            const userGolds = existUser.golds;
+            const userHearts = existUser.hearts;
+            if (hearts === user_constant_1.MINIMUM_HEARTS_BUY_QTY) {
+                if (userGolds < user_constant_1.GOLD_FOR_BUY_3_HEARTS) {
+                    return utils_1.HelperUtil.returnErrorResult(res, "No enough golds to buy hearts.");
+                }
+                const userUpdater = {
+                    hearts: user_constant_1.MINIMUM_HEARTS_BUY_QTY + userHearts > user_constant_1.MAXIMUM_HEARTS
+                        ? user_constant_1.MAXIMUM_HEARTS
+                        : user_constant_1.MINIMUM_HEARTS_BUY_QTY + userHearts,
+                    golds: userGolds - user_constant_1.GOLD_FOR_BUY_3_HEARTS,
+                };
+                updatedUser = yield models_1.UserSchema.findByIdAndUpdate(userId, userUpdater, {
+                    new: true,
+                });
+            }
+            else if (hearts === user_constant_1.MAXIMUM_HEARTS) {
+                if (userGolds < user_constant_1.GOLD_FOR_BUY_5_HEARTS)
+                    return utils_1.HelperUtil.returnErrorResult(res, "No enough golds to buy hearts.");
+                const userUpdater = {
+                    hearts: user_constant_1.MAXIMUM_HEARTS,
+                    golds: userGolds - user_constant_1.GOLD_FOR_BUY_5_HEARTS,
+                };
+                updatedUser = yield models_1.UserSchema.findByIdAndUpdate(userId, userUpdater, {
+                    new: true,
+                });
+            }
+            (0, auth_util_1.removePlayerSensitiveAttributes)(updatedUser);
+            return utils_1.HelperUtil.returnSuccessfulResult(res, { updatedUser });
+        }
+        catch (error) {
+            return utils_1.HelperUtil.returnErrorResult(res, error);
+        }
+    });
+}
+exports.buyHearts = buyHearts;

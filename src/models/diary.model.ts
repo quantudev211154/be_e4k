@@ -73,7 +73,7 @@ export interface IDiaryLession {
   _id: ObjectId;
   lession: ObjectId;
   rounds: IDiaryLessionRound[];
-  isCompleted: false;
+  isCompleted: boolean;
 }
 
 export interface IDiaryCourse {

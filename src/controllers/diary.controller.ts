@@ -72,8 +72,27 @@ export async function updateDiaryForPlayer(req: Request, res: Response) {
                 if (currentLession.lession == lessionId) {
                   currentLession.rounds.push({ roundId, score });
                 }
+
+                const lessionInExistCourse = existCourse.lessions.find(
+                  (lession) =>
+                    lession._id.toString() == currentLession.lession.toString()
+                );
+
+                if (
+                  lessionInExistCourse &&
+                  currentLession.rounds.length >=
+                    lessionInExistCourse.rounds.length
+                )
+                  currentLession.isCompleted = true;
               }
             }
+
+            const completedCourseInDiary = currentCourse.lessions.filter(
+              (lession) => lession.isCompleted
+            );
+
+            if (completedCourseInDiary.length >= currentCourse.lessions.length)
+              currentCourse.isCompleted = true;
           }
 
           Promise.all([userUpdate, existCourseInDiary.save()]).then(

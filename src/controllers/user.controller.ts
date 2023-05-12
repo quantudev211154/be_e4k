@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { HelperUtil } from "../utils";
 import { UserSchema } from "../models";
 import { APIMessage } from "../constants";
+import { removePlayerSensitiveAttributes } from "../utils/auth.util";
 
 export async function register(req: Request, res: Response) {
   try {
@@ -94,6 +95,30 @@ export async function updateUserInfo(req: Request, res: Response) {
       { updatedUser },
       APIMessage.SUC_UPDATED_USER
     );
+  } catch (error) {
+    HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function updateUsernameForPlayer(req: Request, res: Response) {
+  try {
+    const { username, userId } = req.body;
+
+    if (!username || !userId)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existUser = await UserSchema.findById(userId);
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    existUser.username = username;
+
+    const updatedUser = await existUser.save();
+
+    removePlayerSensitiveAttributes(updatedUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { updatedUser });
   } catch (error) {
     HelperUtil.returnErrorResult(res, error);
   }

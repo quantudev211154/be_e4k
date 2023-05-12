@@ -1,11 +1,20 @@
 import { Request, Response } from "express";
 import { HelperUtil } from "../utils";
-import { CourseSchema, DiarySchema } from "../models";
+import { CourseSchema, DiarySchema, ECLRStatus } from "../models";
 import { APIMessage } from "../constants";
 
-export async function getAllCourseFor(req: Request, res: Response) {
+export async function getCourseByTypeForAdmin(req: Request, res: Response) {
   try {
-    const courses = await CourseSchema.find({});
+    const { courseType } = req.query;
+
+    if (!courseType)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const filter = {
+      type: courseType,
+      isDeleted: false,
+    };
+    const courses = await CourseSchema.find(filter);
 
     return HelperUtil.returnSuccessfulResult(res, { courses });
   } catch (error) {
@@ -53,7 +62,28 @@ export async function createDraftCourse(req: Request, res: Response) {
   }
 }
 
-export async function editCourse(req: Request, res: Response) {}
+export async function editCourseForAdmin(req: Request, res: Response) {
+  try {
+    const { course } = req.body;
+
+    console.log(course.type);
+
+    if (!course)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const { _id, ...rest } = course;
+
+    const editedCourse = await CourseSchema.findByIdAndUpdate(
+      _id,
+      { ...rest },
+      { new: true }
+    );
+
+    return HelperUtil.returnSuccessfulResult(res, { editedCourse });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
 
 export async function deleteCourseByCourseId(req: Request, res: Response) {
   try {
@@ -80,7 +110,11 @@ export async function getAllCourseForPlayer(req: Request, res: Response) {
   try {
     let courses: any;
 
-    const foundCourses = await CourseSchema.find().select([
+    const filter = {
+      type: ECLRStatus.PUBLISHED,
+      isDeleted: false,
+    };
+    const foundCourses = await CourseSchema.find(filter).select([
       "-lessions.rounds",
       "-level",
       "-creator",
@@ -119,6 +153,28 @@ export async function getAllCourseForPlayer(req: Request, res: Response) {
 
       courses[i].lessions = undefined;
     }
+
+    return HelperUtil.returnSuccessfulResult(res, { courses });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function searchCourseByKeywordForAdmin(
+  req: Request,
+  res: Response
+) {
+  try {
+    const { keyword } = req.query;
+
+    if (!keyword)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const filter = {
+      title: { $regex: ".*" + keyword + ".*", $options: "i" },
+      isDeleted: false,
+    };
+    const courses = await CourseSchema.find(filter).limit(5);
 
     return HelperUtil.returnSuccessfulResult(res, { courses });
   } catch (error) {

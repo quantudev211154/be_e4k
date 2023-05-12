@@ -34,11 +34,6 @@ const userSchema = new Schema(
       require: false,
       default: 0,
     },
-    level: {
-      type: Number,
-      require: false,
-      default: 0,
-    },
     tokenVersion: {
       type: Number,
       require: false,
@@ -56,6 +51,16 @@ const userSchema = new Schema(
       enum: EUserIsDeleted,
       default: EUserIsDeleted.FALSE,
     },
+    golds: {
+      type: Number,
+      require: false,
+      default: 0,
+    },
+    hearts: {
+      type: Number,
+      require: false,
+      default: 0,
+    },
   },
   {
     collection: "users",
@@ -71,10 +76,11 @@ export interface IUser {
   username: string;
   password?: string;
   weeklyScore?: number;
-  level?: number;
   tokenVersion?: number;
   role?: EUserRole;
   isDeleted?: EUserIsDeleted;
+  golds?: number;
+  hearts?: number;
   registerDate?: Date;
   updatedAt?: Date;
 }

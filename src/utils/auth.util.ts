@@ -35,7 +35,6 @@ export function removeAdminSensitiveAttributes(admin: IUser) {
   admin.tokenVersion = undefined;
   admin.updatedAt = undefined;
   admin.weeklyScore = undefined;
-  admin.level = undefined;
 }
 
 export function removePlayerSensitiveAttributes(player: IUser) {
@@ -43,4 +42,5 @@ export function removePlayerSensitiveAttributes(player: IUser) {
   player.isDeleted = undefined;
   player.tokenVersion = undefined;
   player.updatedAt = undefined;
+  player.role = undefined;
 }

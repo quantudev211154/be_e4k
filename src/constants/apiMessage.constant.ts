@@ -14,7 +14,7 @@ export const ERR_LOGIN_DENIED = "This phone was registerd for other role";
  * For user route
  */
 export const SUC_NEW_USER_CREATED = "New user is created successfully";
-export const SUC_UPDATED_USER = "Use is updated";
+export const SUC_UPDATED_USER = "User is updated";
 
 export const ERR_EXISTED_USER = "This phone is used by another player.";
 export const ERR_NOT_FOUND_USER_BY_PHONE_NUMBER =
@@ -37,3 +37,5 @@ export const ERR_INVALID_LOGIN_TYPE =
   "Phone was registered for ADMIN role. Can not use this phone for PLAYER role.";
 
 export const ERR_NO_LESSION_FOUND = "No lession found";
+
+export const ERR_NO_USER_FOUND = "No user found";

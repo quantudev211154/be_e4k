@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
+exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
 const utils_1 = require("../utils");
 const models_1 = require("../models");
 const constants_1 = require("../constants");
+const auth_util_1 = require("../utils/auth.util");
 function register(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -76,3 +77,23 @@ function updateUserInfo(req, res) {
     });
 }
 exports.updateUserInfo = updateUserInfo;
+function updateUsernameForPlayer(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { username, userId } = req.body;
+            if (!username || !userId)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_MISSING_PARAMS);
+            const existUser = yield models_1.UserSchema.findById(userId);
+            if (!existUser)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_NO_USER_FOUND);
+            existUser.username = username;
+            const updatedUser = yield existUser.save();
+            (0, auth_util_1.removePlayerSensitiveAttributes)(updatedUser);
+            return utils_1.HelperUtil.returnSuccessfulResult(res, { updatedUser });
+        }
+        catch (error) {
+            utils_1.HelperUtil.returnErrorResult(res, error);
+        }
+    });
+}
+exports.updateUsernameForPlayer = updateUsernameForPlayer;

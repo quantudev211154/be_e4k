@@ -61,10 +61,15 @@ const router = express.Router();
  */
 router.get("/player", checkAuth, CourseController.getAllCourseForPlayer);
 
-router.get("/", checkAuth, CourseController.getAllCourseFor);
+router.get(
+  "/search",
+  checkAuth,
+  CourseController.searchCourseByKeywordForAdmin
+);
+router.get("/", checkAuth, CourseController.getCourseByTypeForAdmin);
 router.get("/:id", checkAuth, CourseController.getCourseByCourseId);
 router.post("/", checkAuth, CourseController.createDraftCourse);
-router.put("/", checkAuth, CourseController.editCourse);
+router.put("/", checkAuth, CourseController.editCourseForAdmin);
 router.delete("/:id", checkAuth, CourseController.deleteCourseByCourseId);
 
 export default router;

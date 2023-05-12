@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RoundController = exports.LessionController = exports.WordController = exports.PublicController = exports.CourseController = exports.AuthController = exports.UserController = void 0;
+exports.DiaryController = exports.RoundController = exports.LessionController = exports.WordController = exports.PublicController = exports.CourseController = exports.AuthController = exports.UserController = void 0;
 exports.UserController = __importStar(require("./user.controller"));
 exports.AuthController = __importStar(require("./auth.controller"));
 exports.CourseController = __importStar(require("./course.controller"));
@@ -31,3 +31,4 @@ exports.PublicController = __importStar(require("./public.controller"));
 exports.WordController = __importStar(require("./word.controller"));
 exports.LessionController = __importStar(require("./lession.controller"));
 exports.RoundController = __importStar(require("./round.controller"));
+exports.DiaryController = __importStar(require("./diary.controller"));

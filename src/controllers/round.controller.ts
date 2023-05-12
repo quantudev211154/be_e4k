@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { HelperUtil } from "../utils";
+import { HelperUtil, RandomUtil } from "../utils";
 import { APIMessage } from "../constants";
-import { CourseSchema } from "../models";
+import { CourseSchema, DiarySchema, UserSchema } from "../models";
 import {
   PLAY_TYPE_1,
   PLAY_TYPE_2,
@@ -53,6 +53,8 @@ function convertNewRoundByRoundType(round: any) {
     };
   }
 
+  convertedRound.roundId = RandomUtil.generateRandomUUID();
+
   return convertedRound;
 }
 
@@ -69,17 +71,21 @@ export async function createNewRound(req: Request, res: Response) {
     if (!course)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_COURSE_FOUND);
 
-    for (let i = 0; i < course.lessions.length; ++i) {
-      if (course.lessions[i]._id.toString() == lessionId) {
-        const newRound = convertNewRoundByRoundType(round);
+    const courseFilter = {
+      _id: courseId,
+      "lessions._id": lessionId,
+    };
+    const courseUpdater = {
+      $push: { "lessions.$.rounds": convertNewRoundByRoundType(round) },
+    };
 
-        course.lessions[i].rounds = [...course.lessions[i].rounds, newRound];
-      }
-    }
+    const updatedCourse = await CourseSchema.findOneAndUpdate(
+      courseFilter,
+      courseUpdater,
+      { new: true }
+    );
 
-    await course.save();
-
-    return HelperUtil.returnSuccessfulResult(res, { course });
+    return HelperUtil.returnSuccessfulResult(res, { course: updatedCourse });
   } catch (error: any) {
     return HelperUtil.returnErrorResult(res, error);
   }

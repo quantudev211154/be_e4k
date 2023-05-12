@@ -1,6 +1,6 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 import { IUser } from "./user.model";
-import { ICourse, ILession } from "./course.model";
+import { ICourse } from "./course.model";
 
 const diarySchema = new Schema(
   {
@@ -27,11 +27,23 @@ const diarySchema = new Schema(
               type: Schema.Types.ObjectId,
               require: true,
             },
-            rounds: {
-              type: [Schema.Types.ObjectId],
-              require: false,
-              default: [],
-            },
+            rounds: [
+              {
+                roundId: {
+                  type: String,
+                  require: true,
+                },
+                score: {
+                  type: Number,
+                  require: true,
+                },
+                playedAt: {
+                  type: Date,
+                  require: false,
+                  default: Date.now(),
+                },
+              },
+            ],
             isCompleted: {
               type: Boolean,
               require: false,
@@ -50,11 +62,17 @@ const diarySchema = new Schema(
 
 export const DiarySchema = mongoose.model<IDiary>("Diary", diarySchema);
 
+export interface IDiaryLessionRound {
+  _id?: ObjectId;
+  roundId: string;
+  score: number;
+  playedAt?: Date;
+}
+
 export interface IDiaryLession {
   _id: ObjectId;
   lession: ObjectId;
-  rounds: ObjectId[];
-  score: number;
+  rounds: IDiaryLessionRound[];
   isCompleted: false;
 }
 

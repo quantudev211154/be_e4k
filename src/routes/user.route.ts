@@ -190,4 +190,66 @@ router.get("/player", checkAuth, UserController.getUserInfo);
  */
 router.post("/player/hearts", checkAuth, UserController.buyHearts);
 
+/**
+ * @swagger
+ * /user/player/updateGolds:
+ *   post:
+ *     summary: Update golds for player
+ *     tags: [user/player]
+ *     description: Player receive login gift => Call this API to update player golds
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               golds:
+ *                 type: string
+ *                 description: Golds that user will be updated (increase)
+ *                 example: '100'
+ *     responses:
+ *       200:
+ *         description: Player info after buy hearts (hearts increased, golds descreased)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Status from server
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                      updatedUser:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: '0358434916'
+ *                              username:
+ *                                  type: string
+ *                                  example: Pham Quan Tu HIHIHI
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              registerDate:
+ *                                  type: Date
+ *                                  example: 2023-04-30T17:41:18.167Z
+ *                              golds:
+ *                                  type: integer
+ *                                  example: 100
+ *                              hearts:
+ *                                  type: integer
+ *                                  example: 3
+ *       500:
+ *         description: Missing userId or golds | Not found user
+ */
+router.post("/player/updateGolds", checkAuth, UserController.updateGolds);
+
 export default router;

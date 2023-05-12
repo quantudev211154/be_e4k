@@ -215,3 +215,31 @@ export async function buyHearts(req: Request, res: Response) {
     return HelperUtil.returnErrorResult(res, error);
   }
 }
+
+export async function updateGolds(req: Request, res: Response) {
+  try {
+    const { userId } = req.body;
+    const golds = parseInt(req.body.golds);
+
+    if (!userId || !golds)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existUser = await UserSchema.findById(userId);
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    const updater = {
+      golds: existUser.golds ? existUser.golds + golds : golds,
+    };
+    const updatedUser = await UserSchema.findByIdAndUpdate(userId, updater, {
+      new: true,
+    });
+
+    removePlayerSensitiveAttributes(updatedUser as IUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { updatedUser });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}

@@ -123,3 +123,23 @@ export async function updateUsernameForPlayer(req: Request, res: Response) {
     HelperUtil.returnErrorResult(res, error);
   }
 }
+
+export async function getUserInfo(req: Request, res: Response) {
+  try {
+    const { userId } = req.body;
+
+    if (!userId)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const user = await UserSchema.findById(userId);
+
+    if (!user)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    removePlayerSensitiveAttributes(user);
+
+    return HelperUtil.returnSuccessfulResult(res, { user });
+  } catch (error) {
+    HelperUtil.returnErrorResult(res, error);
+  }
+}

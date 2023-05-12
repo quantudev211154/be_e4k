@@ -71,7 +71,7 @@ const router = express.Router();
 router.get(
   "/player/:courseId",
   checkAuth,
-  LessionController.getAllLessionByCourseId
+  LessionController.getAllLessionByCourseIdForPlayer
 );
 
 router.get(

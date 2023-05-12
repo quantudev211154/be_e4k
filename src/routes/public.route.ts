@@ -18,7 +18,7 @@ const router = express.Router();
  * @swagger
  * /public/player/search?phone={phone}:
  *   get:
- *     summary: Get
+ *     summary: Get some info of user
  *     tags: [public/player]
  *     description: Get _id, phone, username of player but no need to login (no need token)
  *     parameters:

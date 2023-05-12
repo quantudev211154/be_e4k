@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
+exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
 const utils_1 = require("../utils");
 const models_1 = require("../models");
 const constants_1 = require("../constants");
@@ -97,3 +97,21 @@ function updateUsernameForPlayer(req, res) {
     });
 }
 exports.updateUsernameForPlayer = updateUsernameForPlayer;
+function getUserInfo(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { userId } = req.body;
+            if (!userId)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_MISSING_PARAMS);
+            const user = yield models_1.UserSchema.findById(userId);
+            if (!user)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_NO_USER_FOUND);
+            (0, auth_util_1.removePlayerSensitiveAttributes)(user);
+            return utils_1.HelperUtil.returnSuccessfulResult(res, { user });
+        }
+        catch (error) {
+            utils_1.HelperUtil.returnErrorResult(res, error);
+        }
+    });
+}
+exports.getUserInfo = getUserInfo;

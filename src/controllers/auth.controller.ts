@@ -193,6 +193,7 @@ export async function registerForPlayer(req: Request, res: Response) {
       phone,
       username,
       hearts: 5,
+      golds: 500,
     }).save();
 
     const accessToken = AuthUtil.createToken("accessToken", newPlayer);

@@ -30,6 +30,7 @@ const express_1 = __importDefault(require("express"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const configs_1 = require("./configs");
 const dotenv = __importStar(require("dotenv"));
+const dic_util_1 = require("./utils/dic.util");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -41,4 +42,5 @@ const server = app.listen(process.env.API_PORT, () => {
     (0, configs_1.dbConfigAndConnect)();
     (0, configs_1.swaggerConfig)(app);
     (0, configs_1.routesConfig)(app);
+    (0, dic_util_1.importEnglishDataToDB)();
 });

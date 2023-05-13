@@ -252,4 +252,52 @@ router.post("/player/hearts", checkAuth, UserController.buyHearts);
  */
 router.post("/player/updateGolds", checkAuth, UserController.updateGolds);
 
+/**
+ * @swagger
+ * /user/player/scoreBoard:
+ *   get:
+ *     summary: Get scoreboard from all players score
+ *     tags: [user/player]
+ *     description: Call this API to get player scoreboard
+ *     responses:
+ *       200:
+ *         description: Score board
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Status from server
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                      players:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: '0358434916'
+ *                              username:
+ *                                  type: string
+ *                                  example: Pham Quan Tu HIHIHI
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              golds:
+ *                                  type: integer
+ *                                  example: 0
+ *                              hearts:
+ *                                  type: integer
+ *                                  example: 0
+ *       500:
+ *         description: Missing userId or not found user | Phone was used by another player
+ */
+router.get("/player/scoreBoard", checkAuth, UserController.getScoreboard);
+
 export default router;

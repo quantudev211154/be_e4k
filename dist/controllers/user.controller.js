@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateGolds = exports.buyHearts = exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
+exports.getScoreboard = exports.updateGolds = exports.buyHearts = exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
 const utils_1 = require("../utils");
 const models_1 = require("../models");
 const constants_1 = require("../constants");
@@ -190,3 +190,20 @@ function updateGolds(req, res) {
     });
 }
 exports.updateGolds = updateGolds;
+function getScoreboard(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const players = yield models_1.UserSchema.find({
+                role: models_1.EUserRole.PLAYER,
+                isDeleted: false,
+            })
+                .select(["_id", "username", "phone", "weeklyScore", "golds", "hearts"])
+                .sort({ weeklyScore: -1 });
+            return utils_1.HelperUtil.returnSuccessfulResult(res, { players });
+        }
+        catch (error) {
+            return utils_1.HelperUtil.returnErrorResult(res, error);
+        }
+    });
+}
+exports.getScoreboard = getScoreboard;

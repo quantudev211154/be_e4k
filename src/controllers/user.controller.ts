@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HelperUtil } from "../utils";
-import { IUser, UserSchema } from "../models";
+import { EUserRole, IUser, UserSchema } from "../models";
 import { APIMessage } from "../constants";
 import { removePlayerSensitiveAttributes } from "../utils/auth.util";
 import {
@@ -239,6 +239,21 @@ export async function updateGolds(req: Request, res: Response) {
     removePlayerSensitiveAttributes(updatedUser as IUser);
 
     return HelperUtil.returnSuccessfulResult(res, { updatedUser });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function getScoreboard(req: Request, res: Response) {
+  try {
+    const players = await UserSchema.find({
+      role: EUserRole.PLAYER,
+      isDeleted: false,
+    })
+      .select(["_id", "username", "phone", "weeklyScore", "golds", "hearts"])
+      .sort({ weeklyScore: -1 });
+
+    return HelperUtil.returnSuccessfulResult(res, { players });
   } catch (error) {
     return HelperUtil.returnErrorResult(res, error);
   }

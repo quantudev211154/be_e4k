@@ -122,6 +122,11 @@ export async function getAllLessionByCourseIdForPlayer(
                     ...currentLession.rounds[j],
                     isPlayed: true,
                   });
+                } else {
+                  newRounds.push({
+                    ...currentLession.rounds[j],
+                    isPlayed: false,
+                  });
                 }
               }
 

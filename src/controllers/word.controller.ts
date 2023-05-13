@@ -67,13 +67,13 @@ export function searchWordsByKeyWord(req: Request, res: Response) {
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
     Promise.all([
-      WordSchema.find({ engVer: keyword }).limit(2),
+      WordSchema.findOne({ engVer: keyword }),
       WordSchema.find({
         engVer: { $regex: ".*" + keyword + ".*", $options: "i" },
       }).limit(3),
     ]).then(([equalWords, relativeWords]) => {
       return HelperUtil.returnSuccessfulResult(res, {
-        words: [...equalWords, ...relativeWords],
+        words: equalWords ? [equalWords, ...relativeWords] : relativeWords,
       });
     });
   } catch (error) {

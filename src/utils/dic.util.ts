@@ -1,4 +1,3 @@
-import { count } from "console";
 import dicFile from "../dic/data.json";
 import { WordSchema } from "../models";
 import { sys } from "../configs";

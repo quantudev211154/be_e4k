@@ -25,6 +25,4 @@ const server = app.listen(process.env.API_PORT, () => {
   dbConfigAndConnect();
   swaggerConfig(app);
   routesConfig(app);
-
-  importEnglishDataToDB();
 });

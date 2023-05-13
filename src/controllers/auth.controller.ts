@@ -192,6 +192,7 @@ export async function registerForPlayer(req: Request, res: Response) {
     const newPlayer = await new UserSchema({
       phone,
       username,
+      hearts: 5,
     }).save();
 
     const accessToken = AuthUtil.createToken("accessToken", newPlayer);

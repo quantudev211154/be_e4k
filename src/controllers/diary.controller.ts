@@ -25,86 +25,95 @@ export async function updateDiaryForPlayer(req: Request, res: Response) {
     Promise.all([
       UserSchema.findById(userId),
       DiarySchema.findOne(existCourseInDiaryFilter),
-    ]).then(async ([user, existCourseInDiary]) => {
-      if (user && existCourseInDiary) {
-        const userUpdater = {
-          weeklyScore: user?.weeklyScore + score,
-          golds: user.golds ? user.golds + score / 2 : score / 2,
-        };
-        const userUpdate = UserSchema.findByIdAndUpdate(userId, userUpdater);
+    ])
+      .then(async ([user, existCourseInDiary]) => {
+        if (user) {
+          const userUpdater = {
+            weeklyScore: user?.weeklyScore + score,
+            golds: user.golds ? user.golds + score / 2 : score / 2,
+          };
+          const userUpdate = UserSchema.findByIdAndUpdate(userId, userUpdater);
 
-        if (!existCourseInDiary) {
-          const newDiarySchema = new DiarySchema({
-            user: userId,
-            courses: [
-              {
-                course: courseId,
-                lessions: [
-                  {
-                    lession: lessionId,
-                    rounds: [
-                      {
-                        roundId,
-                        score,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          }).save();
+          if (!existCourseInDiary) {
+            const newDiarySchema = new DiarySchema({
+              user: userId,
+              courses: [
+                {
+                  course: courseId,
+                  lessions: [
+                    {
+                      lession: lessionId,
+                      rounds: [
+                        {
+                          roundId,
+                          score,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            }).save();
 
-          Promise.all([userUpdate, newDiarySchema]).then(
-            ([userUpdated, updatedCourseInDiary]) => {
-              return HelperUtil.returnSuccessfulResult(res, {
-                updatedCourseInDiary,
-              });
-            }
-          );
-        } else {
-          for (let i = 0; i < existCourseInDiary.courses.length; ++i) {
-            const currentCourse = existCourseInDiary.courses[i];
-
-            if (currentCourse.course == courseId) {
-              for (let j = 0; j < currentCourse.lessions.length; ++j) {
-                const currentLession = currentCourse.lessions[j];
-
-                if (currentLession.lession == lessionId) {
-                  currentLession.rounds.push({ roundId, score });
-                }
-
-                const lessionInExistCourse = existCourse.lessions.find(
-                  (lession) =>
-                    lession._id.toString() == currentLession.lession.toString()
-                );
-
-                if (
-                  lessionInExistCourse &&
-                  currentLession.rounds.length >=
-                    lessionInExistCourse.rounds.length
-                )
-                  currentLession.isCompleted = true;
+            Promise.all([userUpdate, newDiarySchema]).then(
+              ([userUpdated, updatedCourseInDiary]) => {
+                return HelperUtil.returnSuccessfulResult(res, {
+                  updatedCourseInDiary,
+                });
               }
-            }
-
-            const completedCourseInDiary = currentCourse.lessions.filter(
-              (lession) => lession.isCompleted
             );
+          } else {
+            for (let i = 0; i < existCourseInDiary.courses.length; ++i) {
+              const currentCourse = existCourseInDiary.courses[i];
 
-            if (completedCourseInDiary.length >= currentCourse.lessions.length)
-              currentCourse.isCompleted = true;
-          }
+              if (currentCourse.course == courseId) {
+                for (let j = 0; j < currentCourse.lessions.length; ++j) {
+                  const currentLession = currentCourse.lessions[j];
 
-          Promise.all([userUpdate, existCourseInDiary.save()]).then(
-            ([userUpdated, updatedCourseInDiary]) => {
-              return HelperUtil.returnSuccessfulResult(res, {
-                updatedCourseInDiary,
-              });
+                  if (currentLession.lession == lessionId) {
+                    currentLession.rounds.push({ roundId, score });
+                  }
+
+                  const lessionInExistCourse = existCourse.lessions.find(
+                    (lession) =>
+                      lession._id.toString() ==
+                      currentLession.lession.toString()
+                  );
+
+                  if (
+                    lessionInExistCourse &&
+                    currentLession.rounds.length >=
+                      lessionInExistCourse.rounds.length
+                  )
+                    currentLession.isCompleted = true;
+                }
+              }
+
+              const completedCourseInDiary = currentCourse.lessions.filter(
+                (lession) => lession.isCompleted
+              );
+
+              if (
+                completedCourseInDiary.length >= currentCourse.lessions.length
+              )
+                currentCourse.isCompleted = true;
             }
-          );
+
+            Promise.all([userUpdate, existCourseInDiary.save()]).then(
+              ([userUpdated, updatedCourseInDiary]) => {
+                return HelperUtil.returnSuccessfulResult(res, {
+                  updatedCourseInDiary,
+                });
+              }
+            );
+          }
+        } else {
+          return HelperUtil.returnErrorResult(res, APIMessage.ERR_UNEXPECTED);
         }
-      }
-    });
+      })
+      .catch((err) => {
+        return HelperUtil.returnErrorResult(res, APIMessage.ERR_UNEXPECTED);
+      });
   } catch (error: any) {
     return HelperUtil.returnErrorResult(res, error);
   }

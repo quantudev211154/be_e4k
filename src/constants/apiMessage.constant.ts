@@ -39,3 +39,5 @@ export const ERR_INVALID_LOGIN_TYPE =
 export const ERR_NO_LESSION_FOUND = "No lession found";
 
 export const ERR_NO_USER_FOUND = "No user found";
+
+export const ERR_UNEXPECTED = "Un expected error";

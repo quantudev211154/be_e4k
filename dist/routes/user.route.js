@@ -296,4 +296,66 @@ router.post("/player/updateGolds", auth_middleware_1.checkAuth, controllers_1.Us
  *         description: Missing userId or not found user | Phone was used by another player
  */
 router.get("/player/scoreBoard", auth_middleware_1.checkAuth, controllers_1.UserController.getScoreboard);
+/**
+ * @swagger
+ * /user/player/change-password:
+ *   put:
+ *     summary: Change password for player (must provide token)
+ *     tags: [user/player]
+ *     description: Call this API to help user change password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *                 description: Old password of player
+ *                 example: '123123'
+ *               newPassword:
+ *                 type: string
+ *                 description: New password of player
+ *                 example: '123456'
+ *     responses:
+ *       200:
+ *         description: User info after password changed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Status from server
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                      players:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: '0358434916'
+ *                              username:
+ *                                  type: string
+ *                                  example: Pham Quan Tu HIHIHI
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              golds:
+ *                                  type: integer
+ *                                  example: 0
+ *                              hearts:
+ *                                  type: integer
+ *                                  example: 0
+ *       500:
+ *         description: Missing userId or not found user | Phone was used by another player
+ */
+router.put("/player/change-password", auth_middleware_1.checkAuth, controllers_1.UserController.changePasswordForPlayer);
 exports.default = router;

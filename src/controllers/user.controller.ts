@@ -9,6 +9,7 @@ import {
   MAXIMUM_HEARTS,
   MINIMUM_HEARTS_BUY_QTY,
 } from "../constants/user.constant";
+import { hash, verify } from "argon2";
 
 export async function register(req: Request, res: Response) {
   try {
@@ -254,6 +255,45 @@ export async function getScoreboard(req: Request, res: Response) {
       .sort({ weeklyScore: -1 });
 
     return HelperUtil.returnSuccessfulResult(res, { players });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}
+
+export async function changePasswordForPlayer(req: Request, res: Response) {
+  try {
+    const { userId, oldPassword, newPassword } = req.body;
+
+    if (!userId || !oldPassword || !newPassword)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existUser = await UserSchema.findById(userId);
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    const isValidPassword = await verify(
+      existUser.password as string,
+      oldPassword
+    );
+
+    if (!isValidPassword)
+      return HelperUtil.returnErrorResult(
+        res,
+        APIMessage.ERR_OLD_PASSWORD_INCORRECT
+      );
+
+    const hashedNewPassword = await hash(newPassword);
+
+    const updatedUser = await UserSchema.findByIdAndUpdate(
+      userId,
+      { password: hashedNewPassword },
+      { new: true }
+    );
+
+    if (updatedUser) removePlayerSensitiveAttributes(updatedUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { updatedUser });
   } catch (error) {
     return HelperUtil.returnErrorResult(res, error);
   }

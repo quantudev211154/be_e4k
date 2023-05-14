@@ -95,9 +95,9 @@ router.post("/player/login", AuthController.loginForPlayer);
  * @swagger
  * /auth/player/register:
  *   post:
- *     summary: Register new account for new player
+ *     summary: Register for player
  *     tags: [auth/player]
- *     description: Let's make user enter phone and username => call this API
+ *     description: Call this API to register new user -> After OTP authenticated
  *     requestBody:
  *       required: true
  *       content:
@@ -107,18 +107,18 @@ router.post("/player/login", AuthController.loginForPlayer);
  *             properties:
  *               phone:
  *                 type: string
- *                 description: The phone of new player.
- *                 example: '0358765289
- *               username:
- *                 type: string
- *                 description: The username of new player.
- *                 example: User test GGG
+ *                 description: The phone of player.
+ *                 example: '0358444878'
  *               password:
+ *                 type: string
+ *                 description: The password of player.
+ *                 example: '123123'
+ *               username:
  *                  type: string
- *                  example: 123123
+ *                  example: "Be Heo"
  *     responses:
  *       200:
- *         description: New player info (without password), accessToken, refreshToken
+ *         description: Player info (without password), accessToken, refreshToken
  *         content:
  *           application/json:
  *             schema:
@@ -139,7 +139,7 @@ router.post("/player/login", AuthController.loginForPlayer);
  *                                  example: 644ea83e19b58c0a59a4e788
  *                              phone:
  *                                  type: string
- *                                  example: '0358434916'
+ *                                  example: 0358434916
  *                              username:
  *                                  type: string
  *                                  example: Test player
@@ -162,7 +162,7 @@ router.post("/player/login", AuthController.loginForPlayer);
  *                      type: string
  *                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDRlYTgzZTE5YjU4YzBhNTlhNGU3ODgiLCJyb2xlIjoiUExBWUVSIiwidG9rZW5WZXJzaW9uIjoyLCJpYXQiOjE2ODI4Nzg4MDgsImV4cCI6MTY4MzEzODAwOH0.v-GbmDFFev-rAz8TWZfo4zFX1nJn6Tzl4wiaerKUOYA.eyJ1c2VySWQiOiI2NDRlYTgzZTE5YjU4YzBhNTlhNGU3ODgiLCJyb2xlIjoiUExBWUVSIiwiaWF0IjoxNjgyODc4ODA4LCJleHAiOjE2ODI4ODA2MDh9.9uiHTAYLtKjcYJPjtA5stSGKNXwnScDJvMOMnYW2u74
  *       500:
- *         description: Missing phone or username | Phone was used by another player
+ *         description: Missing phone | login for invalid purpose (such as phone was registered as Admin right, but login as player)
  */
 router.post("/player/register", AuthController.registerForPlayer);
 

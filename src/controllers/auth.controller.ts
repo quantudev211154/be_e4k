@@ -159,7 +159,10 @@ export async function loginForPlayer(req: Request, res: Response) {
     if (existPlayer.role === EUserRole.ADMIN)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_DENIED);
 
-    const isValidPassword = verify(existPlayer.password as string, password);
+    const isValidPassword = await verify(
+      existPlayer.password as string,
+      password
+    );
 
     if (!isValidPassword)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_FAILED);

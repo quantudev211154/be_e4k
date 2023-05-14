@@ -8,9 +8,9 @@ import { CourseSchema, DiarySchema, UserSchema } from "../models";
  */
 export async function updateDiaryForPlayer(req: Request, res: Response) {
   try {
-    const { userId, courseId, lessionId, roundId, score } = req.body;
+    const { userId, courseId, lessionId, roundId, score, hearts } = req.body;
 
-    if (!userId || !courseId || !lessionId || !roundId || !score)
+    if (!userId || !courseId || !lessionId || !roundId || !score || !hearts)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
     const existCourse = await CourseSchema.findById(courseId);
@@ -31,6 +31,7 @@ export async function updateDiaryForPlayer(req: Request, res: Response) {
           const userUpdater = {
             weeklyScore: user?.weeklyScore + score,
             golds: user.golds ? user.golds + score / 2 : score / 2,
+            hearts,
           };
           const userUpdate = UserSchema.findByIdAndUpdate(userId, userUpdater);
 

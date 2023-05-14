@@ -264,7 +264,7 @@ export async function checkSSOForPlayer(req: Request, res: Response) {
     removePlayerSensitiveAttributes(existPlayer);
 
     return HelperUtil.returnSuccessfulResult(res, {
-      user: existPlayer,
+      player: existPlayer,
       accessToken: AuthUtil.createToken("accessToken", existPlayer),
     });
   } catch (error) {

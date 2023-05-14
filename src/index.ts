@@ -9,6 +9,7 @@ import {
 } from "./configs";
 import * as dotenv from "dotenv";
 import { importEnglishDataToDB } from "./utils/dic.util";
+import { UserScheduled } from "./schedule";
 
 const app = express();
 app.use(express.json());
@@ -25,4 +26,6 @@ const server = app.listen(process.env.API_PORT, () => {
   dbConfigAndConnect();
   swaggerConfig(app);
   routesConfig(app);
+
+  UserScheduled.resetUserScroreAndClaimCount();
 });

@@ -108,6 +108,7 @@ export async function deleteCourseByCourseId(req: Request, res: Response) {
 
 export async function getAllCourseForPlayer(req: Request, res: Response) {
   try {
+    const { userId } = req.body;
     let courses: any;
 
     const filter = {
@@ -127,16 +128,14 @@ export async function getAllCourseForPlayer(req: Request, res: Response) {
     courses = [...foundCourses];
 
     for (let i = 0; i < courses.length; ++i) {
-      const diary = await DiarySchema.findOne({
-        "courses.course": courses[i]._id,
-      });
+      const diary = await DiarySchema.findOne({ user: userId });
       let currentLevel = 0;
 
       if (!diary) {
         currentLevel = 0;
       } else {
         const targetCourseInDiary = diary.courses.find(
-          (item) => item._id === courses[i]._id
+          (item) => item.course.toString() == courses[i]._id.toString()
         );
 
         if (!targetCourseInDiary) currentLevel = 0;

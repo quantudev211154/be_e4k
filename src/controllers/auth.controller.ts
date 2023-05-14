@@ -143,13 +143,10 @@ export async function logoutForAdmin(req: Request, res: Response) {
 
 export async function loginForPlayer(req: Request, res: Response) {
   try {
-    const phone = req.body.phone as string;
+    const { phone, password } = req.body;
 
-    if (!phone)
-      return HelperUtil.returnErrorResult(
-        res,
-        APIMessage.ERR_MISSING_USER_PHONE
-      );
+    if (!phone || !password)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
     const existPlayer = await UserSchema.findOne({ phone });
 
@@ -161,6 +158,11 @@ export async function loginForPlayer(req: Request, res: Response) {
 
     if (existPlayer.role === EUserRole.ADMIN)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_DENIED);
+
+    const isValidPassword = verify(existPlayer.password as string, password);
+
+    if (!isValidPassword)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_FAILED);
 
     const accessToken = AuthUtil.createToken("accessToken", existPlayer);
     const refreshToken = AuthUtil.createToken("refreshToken", existPlayer);
@@ -179,9 +181,9 @@ export async function loginForPlayer(req: Request, res: Response) {
 
 export async function registerForPlayer(req: Request, res: Response) {
   try {
-    const { phone, username } = req.body;
+    const { phone, username, password } = req.body;
 
-    if (!phone || !username)
+    if (!phone || !username || !password)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
     const existPlayer = await UserSchema.findOne({ phone });
@@ -189,11 +191,14 @@ export async function registerForPlayer(req: Request, res: Response) {
     if (existPlayer)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_EXISTED_USER);
 
+    const hashedPassword = await hash(password);
+
     const newPlayer = await new UserSchema({
       phone,
       username,
       hearts: 5,
       golds: 500,
+      password: hashedPassword,
     }).save();
 
     const accessToken = AuthUtil.createToken("accessToken", newPlayer);

@@ -1,11 +1,5 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 
-export enum EWordLevel {
-  EASY = "EASY",
-  MEDIUM = "MEDIUM",
-  HARD = "HARD",
-}
-
 const wordSchema = new Schema(
   {
     engVer: {

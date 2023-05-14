@@ -36,7 +36,11 @@ router.post("/admin/logout", AuthController.logoutForAdmin);
  *               phone:
  *                 type: string
  *                 description: The phone of player.
- *                 example: '0358434916'
+ *                 example: '0358444878'
+ *               password:
+ *                 type: string
+ *                 description: The password of player.
+ *                 example: '123123'
  *     responses:
  *       200:
  *         description: Player info (without password), accessToken, refreshToken
@@ -104,11 +108,14 @@ router.post("/player/login", AuthController.loginForPlayer);
  *               phone:
  *                 type: string
  *                 description: The phone of new player.
- *                 example: '0358434920'
+ *                 example: '0358765289
  *               username:
  *                 type: string
  *                 description: The username of new player.
  *                 example: User test GGG
+ *               password:
+ *                  type: string
+ *                  example: 123123
  *     responses:
  *       200:
  *         description: New player info (without password), accessToken, refreshToken

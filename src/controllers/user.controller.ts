@@ -298,3 +298,29 @@ export async function changePasswordForPlayer(req: Request, res: Response) {
     return HelperUtil.returnErrorResult(res, error);
   }
 }
+
+export async function recoverPasswordForPlayer(req: Request, res: Response) {
+  try {
+    const { phone, newPassword } = req.body;
+
+    if (!phone || !newPassword)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existUser = await UserSchema.findOne({ phone });
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    const hashedNewPassword = await hash(newPassword);
+
+    existUser.password = hashedNewPassword;
+
+    const updatedUser = await existUser.save();
+
+    if (updatedUser) removePlayerSensitiveAttributes(updatedUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { updatedUser });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}

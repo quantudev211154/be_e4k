@@ -116,7 +116,6 @@ export async function getAllCourseForPlayer(req: Request, res: Response) {
       isDeleted: false,
     };
     const foundCourses = await CourseSchema.find(filter).select([
-      "-lessions.rounds",
       "-level",
       "-creator",
       "-isDeleted",
@@ -139,7 +138,28 @@ export async function getAllCourseForPlayer(req: Request, res: Response) {
         );
 
         if (!targetCourseInDiary) currentLevel = 0;
-        else currentLevel = targetCourseInDiary.lessions.length;
+        else {
+          let level = 0;
+
+          for (let j = 0; j < courses[i].lessions.length; ++j) {
+            const currentCourseLession = courses[i].lessions[j];
+            const existLessionInCourseDiary = targetCourseInDiary.lessions.find(
+              (lession) =>
+                lession.lession.toString() ==
+                currentCourseLession._id.toString()
+            );
+
+            if (existLessionInCourseDiary) {
+              if (
+                existLessionInCourseDiary.rounds.length ===
+                currentCourseLession.rounds.length
+              )
+                level++;
+            }
+          }
+
+          currentLevel = level;
+        }
       }
 
       const courseLessionNumber = courses[i].lessions.length;

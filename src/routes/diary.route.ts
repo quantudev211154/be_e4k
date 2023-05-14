@@ -45,6 +45,10 @@ const router = express.Router();
  *                 type: number
  *                 description: The score of round that user is playing
  *                 example: 200
+ *               hearts:
+ *                 type: number
+ *                 description: The remain hearts of player
+ *                 example: 3
  *     responses:
  *       200:
  *         description: Diary of user

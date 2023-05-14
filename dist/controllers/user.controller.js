@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recoverPasswordForPlayer = exports.changePasswordForPlayer = exports.getScoreboard = exports.updateGolds = exports.buyHearts = exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
+exports.updateLoginRewardForPlayer = exports.recoverPasswordForPlayer = exports.changePasswordForPlayer = exports.getScoreboard = exports.updateGolds = exports.buyHearts = exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
 const utils_1 = require("../utils");
 const models_1 = require("../models");
 const constants_1 = require("../constants");
@@ -254,3 +254,30 @@ function recoverPasswordForPlayer(req, res) {
     });
 }
 exports.recoverPasswordForPlayer = recoverPasswordForPlayer;
+function updateLoginRewardForPlayer(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { userId, golds } = req.body;
+            if (!userId || !golds)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_MISSING_PARAMS);
+            const existUser = yield models_1.UserSchema.findById(userId);
+            if (!existUser)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_NO_USER_FOUND);
+            const updateFilter = {
+                golds: existUser.golds
+                    ? existUser.golds + parseInt(golds)
+                    : parseInt(golds),
+                lastClaimdDate: new Date(),
+                claimCount: existUser.claimCount ? existUser.claimCount + 1 : 1,
+            };
+            const updatedUser = yield models_1.UserSchema.findByIdAndUpdate(userId, updateFilter, { new: true });
+            if (updatedUser)
+                (0, auth_util_1.removePlayerSensitiveAttributes)(updatedUser);
+            return utils_1.HelperUtil.returnSuccessfulResult(res, { updatedUser });
+        }
+        catch (error) {
+            return utils_1.HelperUtil.returnErrorResult(res, error);
+        }
+    });
+}
+exports.updateLoginRewardForPlayer = updateLoginRewardForPlayer;

@@ -324,3 +324,37 @@ export async function recoverPasswordForPlayer(req: Request, res: Response) {
     return HelperUtil.returnErrorResult(res, error);
   }
 }
+
+export async function updateLoginRewardForPlayer(req: Request, res: Response) {
+  try {
+    const { userId, golds } = req.body;
+
+    if (!userId || !golds)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existUser = await UserSchema.findById(userId);
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    const updateFilter = {
+      golds: existUser.golds
+        ? existUser.golds + parseInt(golds)
+        : parseInt(golds),
+      lastClaimdDate: new Date(),
+      claimCount: existUser.claimCount ? existUser.claimCount + 1 : 1,
+    };
+
+    const updatedUser = await UserSchema.findByIdAndUpdate(
+      userId,
+      updateFilter,
+      { new: true }
+    );
+
+    if (updatedUser) removePlayerSensitiveAttributes(updatedUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { updatedUser });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}

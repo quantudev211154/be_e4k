@@ -61,6 +61,16 @@ const userSchema = new Schema(
       require: false,
       default: 0,
     },
+    lastClaimdDate: {
+      type: Date,
+      require: false,
+      default: new Date(),
+    },
+    claimCount: {
+      type: Number,
+      require: false,
+      default: 0,
+    },
   },
   {
     collection: "users",
@@ -81,6 +91,8 @@ export interface IUser {
   isDeleted?: EUserIsDeleted;
   golds?: number;
   hearts?: number;
+  lastClaimdDate?: Date;
+  claimCount?: number;
   registerDate?: Date;
   updatedAt?: Date;
 }

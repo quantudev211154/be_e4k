@@ -337,7 +337,7 @@ router.get("/player/scoreBoard", checkAuth, UserController.getScoreboard);
  *                 data:
  *                   type: object
  *                   properties:
- *                      players:
+ *                      updatedUser:
  *                          type: object
  *                          properties:
  *                              _id:
@@ -404,7 +404,7 @@ router.put(
  *                 data:
  *                   type: object
  *                   properties:
- *                      players:
+ *                      updatedUser:
  *                          type: object
  *                          properties:
  *                              _id:
@@ -429,5 +429,74 @@ router.put(
  *         description: Missing userId or not found user | Phone was used by another player
  */
 router.put("/player/forget-password", UserController.recoverPasswordForPlayer);
+
+/**
+ * @swagger
+ * /user/player/login-rewards:
+ *   put:
+ *     summary: Update login rewards for play (must provide token)
+ *     tags: [user/player]
+ *     description: Call this API to help user receives login rewards
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               golds:
+ *                 type: integer
+ *                 description: Golds what user can be received
+ *                 example: '100'
+ *     responses:
+ *       200:
+ *         description: User info after password changed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Status from server
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                      updatedUser:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: '0358434916'
+ *                              username:
+ *                                  type: string
+ *                                  example: Pham Quan Tu HIHIHI
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              golds:
+ *                                  type: integer
+ *                                  example: 0
+ *                              hearts:
+ *                                  type: integer
+ *                                  example: 0
+ *                              claimCount:
+ *                                  type: integer
+ *                                  example: 2
+ *                              lastClaimdDate:
+ *                                  type: Date
+ *                                  example: 2023-05-14T04:47:02.730Z
+ *       500:
+ *         description: Missing userId, golds or not found user | Phone was used by another player
+ */
+router.put(
+  "/player/login-rewards",
+  checkAuth,
+  UserController.updateLoginRewardForPlayer
+);
 
 export default router;

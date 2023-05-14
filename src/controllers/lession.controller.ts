@@ -100,12 +100,13 @@ export async function getAllLessionByCourseIdForPlayer(
 
         if (diary) {
           const courseInDiary = diary.courses.find(
-            (course) => course.course.toString() == courseId
+            (course) => course.course.toString() == courseId.toString()
           );
 
           if (courseInDiary) {
             const lessionInDiary = courseInDiary.lessions.find(
-              (lession) => lession.lession.toString() == currentLession._id
+              (lession) =>
+                lession.lession.toString() == currentLession._id.toString()
             );
 
             if (lessionInDiary) {
@@ -134,6 +135,11 @@ export async function getAllLessionByCourseIdForPlayer(
                 ...currentLession,
                 rounds: newRounds,
                 playedRounds: lessionInDiary.rounds.length,
+              };
+            } else {
+              currentLession = {
+                ...currentLession,
+                playedRounds: 0,
               };
             }
           }

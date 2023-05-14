@@ -30,7 +30,9 @@ export async function updateDiaryForPlayer(req: Request, res: Response) {
         if (user) {
           const userUpdater = {
             weeklyScore: user?.weeklyScore + score,
-            golds: user.golds ? user.golds + score / 2 : score / 2,
+            golds: user.golds
+              ? Math.round(user.golds + score / 2)
+              : Math.round(score / 2),
             hearts,
           };
           const userUpdate = UserSchema.findByIdAndUpdate(userId, userUpdater);

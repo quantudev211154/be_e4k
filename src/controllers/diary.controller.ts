@@ -79,7 +79,8 @@ export async function updateDiaryForPlayer(req: Request, res: Response) {
                     lession: lessionId,
                     isCompleted:
                       existCourse.lessions.find(
-                        (lession) => lession._id.toString() == lessionId
+                        (lession) =>
+                          lession._id.toString() == lessionId.toString()
                       )?.rounds.length === 1
                         ? true
                         : false,

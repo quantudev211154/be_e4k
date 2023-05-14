@@ -6,3 +6,4 @@ export * as WordController from "./word.controller";
 export * as LessionController from "./lession.controller";
 export * as RoundController from "./round.controller";
 export * as DiaryController from "./diary.controller";
+export * as TestBankController from "./testBank.controller";

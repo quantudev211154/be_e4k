@@ -358,3 +358,39 @@ export async function updateLoginRewardForPlayer(req: Request, res: Response) {
     return HelperUtil.returnErrorResult(res, error);
   }
 }
+
+export async function updateHeartsForPlayer(req: Request, res: Response) {
+  try {
+    const { userId, hearts } = req.body;
+
+    if (!userId || !hearts)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const existUser = await UserSchema.findById(userId);
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    let newHearts = 0;
+
+    if (parseInt(hearts) < 0) newHearts = 0;
+    else if (parseInt(hearts) > MAXIMUM_HEARTS) newHearts = MAXIMUM_HEARTS;
+    else newHearts = parseInt(hearts);
+
+    const updateFilter = {
+      hearts: newHearts,
+    };
+
+    const updatedUser = await UserSchema.findByIdAndUpdate(
+      userId,
+      updateFilter,
+      { new: true }
+    );
+
+    if (updatedUser) removePlayerSensitiveAttributes(updatedUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { updatedUser });
+  } catch (error) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}

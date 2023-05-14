@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateLoginRewardForPlayer = exports.recoverPasswordForPlayer = exports.changePasswordForPlayer = exports.getScoreboard = exports.updateGolds = exports.buyHearts = exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
+exports.updateHeartsForPlayer = exports.updateLoginRewardForPlayer = exports.recoverPasswordForPlayer = exports.changePasswordForPlayer = exports.getScoreboard = exports.updateGolds = exports.buyHearts = exports.getUserInfo = exports.updateUsernameForPlayer = exports.updateUserInfo = exports.findPlayerByPhone = exports.register = void 0;
 const utils_1 = require("../utils");
 const models_1 = require("../models");
 const constants_1 = require("../constants");
@@ -281,3 +281,33 @@ function updateLoginRewardForPlayer(req, res) {
     });
 }
 exports.updateLoginRewardForPlayer = updateLoginRewardForPlayer;
+function updateHeartsForPlayer(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { userId, hearts } = req.body;
+            if (!userId || !hearts)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_MISSING_PARAMS);
+            const existUser = yield models_1.UserSchema.findById(userId);
+            if (!existUser)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_NO_USER_FOUND);
+            let newHearts = 0;
+            if (parseInt(hearts) < 0)
+                newHearts = 0;
+            else if (parseInt(hearts) > user_constant_1.MAXIMUM_HEARTS)
+                newHearts = user_constant_1.MAXIMUM_HEARTS;
+            else
+                newHearts = parseInt(hearts);
+            const updateFilter = {
+                hearts: newHearts,
+            };
+            const updatedUser = yield models_1.UserSchema.findByIdAndUpdate(userId, updateFilter, { new: true });
+            if (updatedUser)
+                (0, auth_util_1.removePlayerSensitiveAttributes)(updatedUser);
+            return utils_1.HelperUtil.returnSuccessfulResult(res, { updatedUser });
+        }
+        catch (error) {
+            return utils_1.HelperUtil.returnErrorResult(res, error);
+        }
+    });
+}
+exports.updateHeartsForPlayer = updateHeartsForPlayer;

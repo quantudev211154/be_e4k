@@ -6,6 +6,7 @@ import {
   LessionRouter,
   PublicRouter,
   RoundRouter,
+  TestBankRouter,
   UserRouter,
   WordRouter,
 } from "../routes";
@@ -19,6 +20,7 @@ export default function (app: Express) {
   app.use("/api/diary", DiaryRouter);
   app.use("/api/user", UserRouter);
   app.use("/api/word", WordRouter);
+  app.use("/api/testBank", TestBankRouter);
   app.use("/api", (req: Request, res: Response) => {
     return res.send(`<center><h1>Welcome to E4K back-end</h1></center>`);
   });

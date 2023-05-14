@@ -64,7 +64,7 @@ const userSchema = new Schema(
     lastClaimdDate: {
       type: Date,
       require: false,
-      default: new Date(),
+      default: "",
     },
     claimCount: {
       type: Number,

@@ -484,4 +484,68 @@ router.put("/player/forget-password", controllers_1.UserController.recoverPasswo
  *         description: Missing userId, golds or not found user | Phone was used by another player
  */
 router.put("/player/login-rewards", auth_middleware_1.checkAuth, controllers_1.UserController.updateLoginRewardForPlayer);
+/**
+ * @swagger
+ * /user/player/update-hearts:
+ *   put:
+ *     summary: Update heart for user (must provide token)
+ *     tags: [user/player]
+ *     description: Call this API to update hearts of user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               hearts:
+ *                 type: integer
+ *                 description: New hearts of user
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: User info after updated hearts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Status from server
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                      updatedUser:
+ *                          type: object
+ *                          properties:
+ *                              _id:
+ *                                  type: string
+ *                                  example: 644ea83e19b58c0a59a4e788
+ *                              phone:
+ *                                  type: string
+ *                                  example: '0358434916'
+ *                              username:
+ *                                  type: string
+ *                                  example: Pham Quan Tu HIHIHI
+ *                              weeklyScore:
+ *                                  type: integer
+ *                                  example: 0
+ *                              golds:
+ *                                  type: integer
+ *                                  example: 0
+ *                              hearts:
+ *                                  type: integer
+ *                                  example: 0
+ *                              claimCount:
+ *                                  type: integer
+ *                                  example: 2
+ *                              lastClaimdDate:
+ *                                  type: Date
+ *                                  example: 2023-05-14T04:47:02.730Z
+ *       500:
+ *         description: Missing userId, hearts or not found user | Phone was used by another player
+ */
+router.put("/player/update-hearts", auth_middleware_1.checkAuth, controllers_1.UserController.updateHeartsForPlayer);
 exports.default = router;

@@ -70,7 +70,7 @@ export interface IDiaryLessionRound {
 }
 
 export interface IDiaryLession {
-  _id: ObjectId;
+  _id?: ObjectId;
   lession: ObjectId;
   rounds: IDiaryLessionRound[];
   isCompleted: boolean;

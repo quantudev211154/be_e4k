@@ -69,26 +69,45 @@ export async function updateDiaryForPlayer(req: Request, res: Response) {
             for (let i = 0; i < existCourseInDiary.courses.length; ++i) {
               const currentCourse = existCourseInDiary.courses[i];
 
-              if (currentCourse.course == courseId) {
-                for (let j = 0; j < currentCourse.lessions.length; ++j) {
-                  const currentLession = currentCourse.lessions[j];
+              if (currentCourse.course.toString() == courseId.toString()) {
+                const existLessionInCourseDiary = currentCourse.lessions.find(
+                  (lession) => lession.lession.toString() == lessionId
+                );
 
-                  if (currentLession.lession == lessionId) {
-                    currentLession.rounds.push({ roundId, score });
+                if (!existLessionInCourseDiary) {
+                  currentCourse.lessions.push({
+                    lession: lessionId,
+                    isCompleted:
+                      existCourse.lessions.find(
+                        (lession) => lession._id.toString() == lessionId
+                      )?.rounds.length === 1
+                        ? true
+                        : false,
+                    rounds: [{ roundId, score }],
+                  });
+                } else {
+                  for (let j = 0; j < currentCourse.lessions.length; ++j) {
+                    const currentLession = currentCourse.lessions[j];
+
+                    if (
+                      currentLession.lession.toString() == lessionId.toString()
+                    ) {
+                      currentLession.rounds.push({ roundId, score });
+                    }
+
+                    const lessionInExistCourse = existCourse.lessions.find(
+                      (lession) =>
+                        lession._id.toString() ==
+                        currentLession.lession.toString()
+                    );
+
+                    if (
+                      lessionInExistCourse &&
+                      currentLession.rounds.length >=
+                        lessionInExistCourse.rounds.length
+                    )
+                      currentLession.isCompleted = true;
                   }
-
-                  const lessionInExistCourse = existCourse.lessions.find(
-                    (lession) =>
-                      lession._id.toString() ==
-                      currentLession.lession.toString()
-                  );
-
-                  if (
-                    lessionInExistCourse &&
-                    currentLession.rounds.length >=
-                      lessionInExistCourse.rounds.length
-                  )
-                    currentLession.isCompleted = true;
                 }
               }
 

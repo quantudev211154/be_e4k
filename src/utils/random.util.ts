@@ -7,5 +7,5 @@ function generateRandomHEXAColor(): string {
 }
 
 export function generateRandomUUID(): string {
-  return `${generateRandomHEXAColor()}-${uuidV4()}`;
+  return `${uuidV4()}`;
 }

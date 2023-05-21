@@ -11,6 +11,11 @@ export enum EUserIsDeleted {
   TRUE = 1,
 }
 
+export enum EUserLevel {
+  NEWBIE = "NEWBIE",
+  STARTER = "STARTER",
+}
+
 const userSchema = new Schema(
   {
     phone: {
@@ -44,6 +49,11 @@ const userSchema = new Schema(
       require: false,
       enum: EUserRole,
       default: EUserRole.PLAYER,
+    },
+    level: {
+      type: String,
+      require: true,
+      enum: EUserLevel,
     },
     isDeleted: {
       type: Boolean,
@@ -88,6 +98,7 @@ export interface IUser {
   weeklyScore?: number;
   tokenVersion?: number;
   role?: EUserRole;
+  level: EUserLevel;
   isDeleted?: EUserIsDeleted;
   golds?: number;
   hearts?: number;

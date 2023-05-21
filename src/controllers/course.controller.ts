@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { HelperUtil } from "../utils";
-import { CourseSchema, DiarySchema, ECLRStatus } from "../models";
+import { CourseSchema } from "../models";
 import { APIMessage } from "../constants";
 
-export async function getCourseByTypeForAdmin(req: Request, res: Response) {
+export async function getCourseByType(req: Request, res: Response) {
   try {
     const { courseType } = req.query;
 
@@ -14,7 +14,7 @@ export async function getCourseByTypeForAdmin(req: Request, res: Response) {
       type: courseType,
       isDeleted: false,
     };
-    const courses = await CourseSchema.find(filter);
+    const courses = await CourseSchema.find(filter).sort({ position: -1 });
 
     return HelperUtil.returnSuccessfulResult(res, { courses });
   } catch (error) {
@@ -39,17 +39,21 @@ export async function getCourseByCourseId(req: Request, res: Response) {
 
 export async function createDraftCourse(req: Request, res: Response) {
   try {
-    const { title, description, userId } = req.body;
+    const { title, description, userId, level } = req.body;
 
-    console.log(title, description, userId);
-
-    if (!title || !description)
+    if (!title || !description || !userId || !level)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const courseWithHighestPosition = await CourseSchema.findOne().sort({
+      position: -1,
+    });
 
     const createdCourse = await new CourseSchema({
       title,
       description,
       creator: userId,
+      level,
+      position: courseWithHighestPosition ? courseWithHighestPosition : 0,
     }).save();
 
     return HelperUtil.returnSuccessfulResult(
@@ -62,7 +66,7 @@ export async function createDraftCourse(req: Request, res: Response) {
   }
 }
 
-export async function editCourseForAdmin(req: Request, res: Response) {
+export async function editCourse(req: Request, res: Response) {
   try {
     const { course } = req.body;
 
@@ -102,87 +106,7 @@ export async function deleteCourseByCourseId(req: Request, res: Response) {
   }
 }
 
-/**
- * FOR PLAYER
- */
-
-export async function getAllCourseForPlayer(req: Request, res: Response) {
-  try {
-    const { userId } = req.body;
-    let courses: any;
-
-    const filter = {
-      type: ECLRStatus.PUBLISHED,
-      isDeleted: false,
-    };
-    const foundCourses = await CourseSchema.find(filter).select([
-      "-level",
-      "-creator",
-      "-isDeleted",
-      "-deletedBy",
-      "-updatedAt",
-      "-type",
-    ]);
-
-    courses = [...foundCourses];
-
-    for (let i = 0; i < courses.length; ++i) {
-      const diary = await DiarySchema.findOne({ user: userId });
-      let currentLevel = 0;
-
-      if (!diary) {
-        currentLevel = 0;
-      } else {
-        const targetCourseInDiary = diary.courses.find(
-          (item) => item.course.toString() == courses[i]._id.toString()
-        );
-
-        if (!targetCourseInDiary) currentLevel = 0;
-        else {
-          let level = 0;
-
-          for (let j = 0; j < courses[i].lessions.length; ++j) {
-            const currentCourseLession = courses[i].lessions[j];
-            const existLessionInCourseDiary = targetCourseInDiary.lessions.find(
-              (lession) =>
-                lession.lession.toString() ==
-                currentCourseLession._id.toString()
-            );
-
-            if (existLessionInCourseDiary) {
-              if (
-                existLessionInCourseDiary.rounds.length ===
-                currentCourseLession.rounds.length
-              )
-                level++;
-            }
-          }
-
-          currentLevel = level;
-        }
-      }
-
-      const courseLessionNumber = courses[i].lessions.length;
-
-      courses[i] = {
-        ...courses[i]._doc,
-        currentLevel,
-        totalLevel: courseLessionNumber,
-      };
-
-      courses[i].lessions = undefined;
-    }
-
-    return HelperUtil.returnSuccessfulResult(res, { courses });
-  } catch (error) {
-    return HelperUtil.returnErrorResult(res, error);
-  }
-}
-
-export async function searchCourseByKeywordForAdmin(
-  req: Request,
-  res: Response
-) {
+export async function searchCourseByKeyword(req: Request, res: Response) {
   try {
     const { keyword } = req.query;
 

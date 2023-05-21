@@ -33,6 +33,7 @@ export const ROUND_TYPE_1_INIT_VALUE: IRoundType1 = {
   allowedMoves: PLAY_TYPE_1_ALLOWED_MOVES,
   cards: [],
   totalPairs: 2,
+  createdAt: new Date(),
 };
 
 export const ROUND_TYPE_2_INIT_VALUE: IRoundType2 = {
@@ -41,6 +42,7 @@ export const ROUND_TYPE_2_INIT_VALUE: IRoundType2 = {
   correctAns: "",
   question: "",
   cards: [],
+  createdAt: new Date(),
 };
 
 export const ROUND_TYPE_3_INIT_VALUE: IRoundType3 = {
@@ -50,6 +52,7 @@ export const ROUND_TYPE_3_INIT_VALUE: IRoundType3 = {
   question: "",
   randomWords: [],
   score: PLAY_TYPE_3_SCORE,
+  createdAt: new Date(),
 };
 
 export const ROUND_TYPE_4_INIT_VALUE: IRoundType4 = {
@@ -57,6 +60,7 @@ export const ROUND_TYPE_4_INIT_VALUE: IRoundType4 = {
   score: PLAY_TYPE_4_SCORE,
   correctAns: "",
   question: "",
+  createdAt: new Date(),
 };
 
 export const ROUND_TYPE_5_INIT_VALUE: IRoundType5 = {
@@ -66,6 +70,7 @@ export const ROUND_TYPE_5_INIT_VALUE: IRoundType5 = {
   playType: PLAY_TYPE_5,
   question: "",
   score: PLAY_TYPE_5_SCORE,
+  createdAt: new Date(),
 };
 
 export const ROUND_TYPE_6_INIT_VALUE: IRoundType6 = {
@@ -73,4 +78,5 @@ export const ROUND_TYPE_6_INIT_VALUE: IRoundType6 = {
   score: PLAY_TYPE_6_SCORE,
   cards: [],
   allowedMoves: PLAY_TYPE_6_ALLOWED_MOVES,
+  createdAt: new Date(),
 };

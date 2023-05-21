@@ -1,7 +1,5 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 import { IUser } from "./user.model";
-import { CourseConstant } from "../constants";
-import { IWord } from "./word.model";
 
 /**
  * Course, lession and round status use one enum (same properties): Published (player can play) or draft
@@ -9,6 +7,12 @@ import { IWord } from "./word.model";
 export enum ECLRStatus {
   PUBLISHED = "PUBLISHED",
   DRAFT = "DRAFT",
+}
+
+export enum ECourseLevel {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
 }
 
 const courseSchema = new Schema(
@@ -21,10 +25,16 @@ const courseSchema = new Schema(
       type: String,
       require: true,
     },
-    level: {
+    position: {
       type: Number,
       require: false,
       default: null,
+    },
+    level: {
+      type: String,
+      require: false,
+      enum: ECourseLevel,
+      default: ECourseLevel.EASY,
     },
     creator: {
       type: Schema.Types.ObjectId,
@@ -55,7 +65,7 @@ const courseSchema = new Schema(
           require: false,
           default: ECLRStatus.DRAFT,
         },
-        level: {
+        position: {
           type: Number,
           require: false,
           default: null,
@@ -99,7 +109,7 @@ export interface ILession {
   _id: ObjectId;
   title: string;
   type: ECLRStatus;
-  level: number;
+  position: number;
   description: string;
   creator: IUser;
   rounds: any[];
@@ -111,7 +121,8 @@ export interface ICourse {
   description?: string;
   creator: IUser;
   type: ECLRStatus;
-  level: number;
+  position: number;
+  level: ECourseLevel;
   lessions: ILession[];
   isDeleted?: boolean;
   deletedBy?: IUser;

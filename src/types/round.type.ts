@@ -1,6 +1,7 @@
 export interface IBaseRound {
   playType: number;
   score: number;
+  createdAt: Date;
 }
 
 export interface IBaseCard {

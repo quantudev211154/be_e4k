@@ -55,7 +55,7 @@ const diarySchema = new Schema(
     ],
   },
   {
-    collection: "diarys",
+    collection: "diaries",
     timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
   }
 );

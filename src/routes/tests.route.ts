@@ -4,6 +4,7 @@ import { TestBankController } from "../controllers";
 
 const router = express.Router();
 
-router.post("/admin", checkAuth, TestBankController.addTestToTestBank);
+router.get("/", checkAuth, TestBankController.getAllTests);
+router.post("/", checkAuth, TestBankController.createNewTest);
 
 export default router;

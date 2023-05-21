@@ -4,3 +4,4 @@ export * as CourseConstant from "./course.constant";
 export * as WordConstant from "./word.constant";
 export * as RoundConstant from "./round.constant";
 export * as UserConstant from "./user.constant";
+export * from "./test.constant";

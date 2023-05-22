@@ -44,7 +44,7 @@ export async function createDraftCourse(req: Request, res: Response) {
     if (!title || !description || !userId || !level)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
 
-    const courseWithHighestPosition = await CourseSchema.findOne().sort({
+    const courseWithHighestPosition = await CourseSchema.find().sort({
       position: -1,
     });
 
@@ -53,7 +53,9 @@ export async function createDraftCourse(req: Request, res: Response) {
       description,
       creator: userId,
       level,
-      position: courseWithHighestPosition ? courseWithHighestPosition : 0,
+      position: courseWithHighestPosition
+        ? courseWithHighestPosition.length
+        : 0,
     }).save();
 
     return HelperUtil.returnSuccessfulResult(

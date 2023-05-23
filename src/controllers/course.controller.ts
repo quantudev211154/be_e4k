@@ -14,7 +14,7 @@ export async function getCourseByType(req: Request, res: Response) {
       type: courseType,
       isDeleted: false,
     };
-    const courses = await CourseSchema.find(filter).sort({ position: -1 });
+    const courses = await CourseSchema.find(filter).sort({ position: 1 });
 
     return HelperUtil.returnSuccessfulResult(res, { courses });
   } catch (error) {

@@ -153,3 +153,37 @@ export async function deleteRound(req: Request, res: Response) {
     return HelperUtil.returnErrorResult(res, error);
   }
 }
+
+export async function getRoundByRoundId(req: Request, res: Response) {
+  try {
+    const { courseId, lessionId, roundId } = req.params;
+
+    if (!courseId || !lessionId || !roundId)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const course = await CourseSchema.findById(courseId);
+
+    if (!course)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_COURSE_FOUND);
+
+    const existLession = course.lessions.find(
+      (lession) => lession._id.toString() == lessionId
+    );
+
+    if (!existLession)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_LESSION_FOUND);
+
+    const targetRound = existLession.rounds.find(
+      (round) => round.roundId === roundId
+    );
+
+    if (!targetRound)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_ROUND_FOUND);
+
+    return HelperUtil.returnSuccessfulResult(res, {
+      round: targetRound,
+    });
+  } catch (error: any) {
+    return HelperUtil.returnErrorResult(res, error);
+  }
+}

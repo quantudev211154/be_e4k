@@ -43,3 +43,5 @@ export const ERR_NO_USER_FOUND = "No user found";
 export const ERR_UNEXPECTED = "Un expected error";
 
 export const ERR_OLD_PASSWORD_INCORRECT = "Old password is incorrect";
+
+export const ERR_NO_ROUND_FOUND = "No round found";

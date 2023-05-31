@@ -4,8 +4,8 @@ import swaggerJSDoc from "swagger-jsdoc";
 import { sys } from ".";
 
 export default function (app: Express) {
-  const serverPort = process.env.API_PORT;
-  const host = process.env.BASE_URL;
+  const serverPort = process.env.PORT || process.env.API_PORT;
+  const host = process.env.URL || process.env.BASE_URL;
 
   const swaggerOptions: swaggerJSDoc.Options = {
     definition: {

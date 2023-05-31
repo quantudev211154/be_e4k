@@ -17,10 +17,11 @@ app.use(cookieParser());
 
 dotenv.config();
 
-const server = app.listen(process.env.API_PORT, () => {
-  sys.log(
-    `API Server listening at ${process.env.BASE_URL}:${process.env.API_PORT}/api`
-  );
+const PORT = process.env.PORT || process.env.API_PORT;
+const URL = process.env.URL || process.env.BASE_URL;
+
+const server = app.listen(PORT, () => {
+  sys.log(`API Server listening at ${URL}:${PORT}/api`);
   corsConfig(app);
   dbConfigAndConnect();
   swaggerConfig(app);

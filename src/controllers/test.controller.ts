@@ -52,3 +52,68 @@ export async function getAllTests(req: Request, res: Response) {
     return HelperUtil.returnUnauthorizedResult(res);
   }
 }
+
+export async function findTestByQuestion(req: Request, res: Response) {
+  try {
+    const question = req.params.question;
+
+    if (!question)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const filter = {
+      question: { $regex: ".*" + question + ".*", $options: "i" },
+      isDeleted: false,
+    };
+
+    const tests = await TestSchema.find(filter).limit(5);
+
+    return HelperUtil.returnSuccessfulResult(res, { tests });
+  } catch (error) {
+    console.log(error);
+    return HelperUtil.returnUnauthorizedResult(res);
+  }
+}
+
+export async function getTestById(req: Request, res: Response) {
+  try {
+    const testId = req.params.id;
+
+    if (!testId)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const test = await TestSchema.findById(testId);
+
+    if (!test)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_TEST_NOT_FOUND);
+
+    return HelperUtil.returnSuccessfulResult(res, { test });
+  } catch (error) {
+    console.log(error);
+    return HelperUtil.returnUnauthorizedResult(res);
+  }
+}
+
+export async function deleteTestById(req: Request, res: Response) {
+  try {
+    const testId = req.params.id;
+    const userId = req.body.userId;
+
+    if (!testId || !userId)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    const test = await TestSchema.findById(testId);
+
+    if (!test)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_TEST_NOT_FOUND);
+
+    const deletedTest = await TestSchema.findByIdAndUpdate(testId, {
+      isDeleted: true,
+      deletedBy: userId,
+    });
+
+    return HelperUtil.returnSuccessfulResult(res, { deletedTest });
+  } catch (error) {
+    console.log(error);
+    return HelperUtil.returnUnauthorizedResult(res);
+  }
+}

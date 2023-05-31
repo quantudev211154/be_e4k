@@ -53,14 +53,13 @@ export async function login(req: Request, res: Response) {
 
     const existUser = await UserSchema.findOne({ phone });
 
-    console.log(existUser);
-
     if (!existUser)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_FAILED);
 
-    console.log(password);
-
-    const isValidPassword = verify(existUser.password as string, password);
+    const isValidPassword = await verify(
+      existUser.password as string,
+      password
+    );
 
     if (!isValidPassword)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_LOGIN_FAILED);

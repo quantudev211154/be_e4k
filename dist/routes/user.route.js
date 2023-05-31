@@ -11,6 +11,7 @@ router.get("/", auth_middleware_1.checkAuth, controllers_1.UserController.getAll
 router.get("/search", auth_middleware_1.checkAuth, controllers_1.UserController.searchUserByNameOrPhone);
 router.get("/:phone", auth_middleware_1.checkAuth, controllers_1.UserController.findUserByPhone);
 router.post("/", auth_middleware_1.checkAuth, controllers_1.UserController.register);
+router.put("/change-pwd", auth_middleware_1.checkAuth, controllers_1.UserController.changePassword);
 router.put("/", auth_middleware_1.checkAuth, controllers_1.UserController.updateUserInfo);
 router.delete("/:id", auth_middleware_1.checkAuth, controllers_1.UserController.deleteUser);
 exports.default = router;

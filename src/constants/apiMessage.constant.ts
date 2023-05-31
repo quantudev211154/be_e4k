@@ -47,3 +47,5 @@ export const ERR_OLD_PASSWORD_INCORRECT = "Old password is incorrect";
 export const ERR_NO_ROUND_FOUND = "No round found";
 
 export const ERR_USER_HAS_NO_PERMISSION = "No permission to do";
+
+export const ERR_TEST_NOT_FOUND = "Test not found";

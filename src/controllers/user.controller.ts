@@ -209,3 +209,37 @@ export async function searchUserByNameOrPhone(req: Request, res: Response) {
     HelperUtil.returnErrorResult(res, error);
   }
 }
+
+export async function changePassword(req: Request, res: Response) {
+  try {
+    const { oldPassword, newPassword, userId } = req.body;
+
+    if (!oldPassword || !newPassword)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_MISSING_PARAMS);
+
+    let existUser = await UserSchema.findById(userId);
+
+    if (!existUser)
+      return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
+
+    const isOldPasswordValid = await verify(
+      existUser.password as string,
+      oldPassword
+    );
+
+    if (!isOldPasswordValid)
+      return HelperUtil.returnErrorResult(res, "Old password does not match");
+
+    const hashed = await hash(newPassword);
+
+    const newUser = await UserSchema.findByIdAndUpdate(userId, {
+      password: hashed,
+    });
+
+    removeAdminSensitiveAttributes(newUser as IUser);
+
+    return HelperUtil.returnSuccessfulResult(res, { newUser });
+  } catch (error) {
+    HelperUtil.returnErrorResult(res, error);
+  }
+}

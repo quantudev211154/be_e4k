@@ -47,11 +47,9 @@ function login(req, res) {
             if (!phone || !password)
                 return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_MISSING_USER_PHONE);
             const existUser = yield models_1.UserSchema.findOne({ phone });
-            console.log(existUser);
             if (!existUser)
                 return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_LOGIN_FAILED);
-            console.log(password);
-            const isValidPassword = (0, argon2_1.verify)(existUser.password, password);
+            const isValidPassword = yield (0, argon2_1.verify)(existUser.password, password);
             if (!isValidPassword)
                 return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_LOGIN_FAILED);
             (0, auth_util_1.sendRefreshToken)(res, existUser);

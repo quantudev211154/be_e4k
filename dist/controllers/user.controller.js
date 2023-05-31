@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchUserByNameOrPhone = exports.deleteUser = exports.getAllUsers = exports.updateUserInfo = exports.findUserByPhone = exports.register = void 0;
+exports.changePassword = exports.searchUserByNameOrPhone = exports.deleteUser = exports.getAllUsers = exports.updateUserInfo = exports.findUserByPhone = exports.register = void 0;
 const utils_1 = require("../utils");
 const models_1 = require("../models");
 const constants_1 = require("../constants");
@@ -171,3 +171,28 @@ function searchUserByNameOrPhone(req, res) {
     });
 }
 exports.searchUserByNameOrPhone = searchUserByNameOrPhone;
+function changePassword(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { oldPassword, newPassword, userId } = req.body;
+            if (!oldPassword || !newPassword)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_MISSING_PARAMS);
+            let existUser = yield models_1.UserSchema.findById(userId);
+            if (!existUser)
+                return utils_1.HelperUtil.returnErrorResult(res, constants_1.APIMessage.ERR_NO_USER_FOUND);
+            const isOldPasswordValid = yield (0, argon2_1.verify)(existUser.password, oldPassword);
+            if (!isOldPasswordValid)
+                return utils_1.HelperUtil.returnErrorResult(res, "Old password does not match");
+            const hashed = yield (0, argon2_1.hash)(newPassword);
+            const newUser = yield models_1.UserSchema.findByIdAndUpdate(userId, {
+                password: hashed,
+            });
+            (0, auth_util_1.removeAdminSensitiveAttributes)(newUser);
+            return utils_1.HelperUtil.returnSuccessfulResult(res, { newUser });
+        }
+        catch (error) {
+            utils_1.HelperUtil.returnErrorResult(res, error);
+        }
+    });
+}
+exports.changePassword = changePassword;

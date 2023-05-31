@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ERR_USER_HAS_NO_PERMISSION = exports.ERR_NO_ROUND_FOUND = exports.ERR_OLD_PASSWORD_INCORRECT = exports.ERR_UNEXPECTED = exports.ERR_NO_USER_FOUND = exports.ERR_NO_LESSION_FOUND = exports.ERR_INVALID_LOGIN_TYPE = exports.ERR_NO_COURSE_FOUND = exports.ERR_NO_EXIST_ADMIN = exports.ERR_EXIST_ADMIN = exports.ERR_MISSING_USER_PHONE = exports.ERR_NOT_FOUND_USER_BY_PHONE_NUMBER = exports.ERR_EXISTED_USER = exports.SUC_UPDATED_USER = exports.SUC_NEW_USER_CREATED = exports.ERR_LOGIN_DENIED = exports.ERR_LOGIN_FAILED = exports.ERR_AUTH_TOKEN_NOT_FOUND = exports.ERR_NO_PERMISSION = exports.ERR_MISSING_PARAMS = void 0;
+exports.ERR_TEST_NOT_FOUND = exports.ERR_USER_HAS_NO_PERMISSION = exports.ERR_NO_ROUND_FOUND = exports.ERR_OLD_PASSWORD_INCORRECT = exports.ERR_UNEXPECTED = exports.ERR_NO_USER_FOUND = exports.ERR_NO_LESSION_FOUND = exports.ERR_INVALID_LOGIN_TYPE = exports.ERR_NO_COURSE_FOUND = exports.ERR_NO_EXIST_ADMIN = exports.ERR_EXIST_ADMIN = exports.ERR_MISSING_USER_PHONE = exports.ERR_NOT_FOUND_USER_BY_PHONE_NUMBER = exports.ERR_EXISTED_USER = exports.SUC_UPDATED_USER = exports.SUC_NEW_USER_CREATED = exports.ERR_LOGIN_DENIED = exports.ERR_LOGIN_FAILED = exports.ERR_AUTH_TOKEN_NOT_FOUND = exports.ERR_NO_PERMISSION = exports.ERR_MISSING_PARAMS = void 0;
 /**
  * For all APIs
  */
@@ -36,3 +36,4 @@ exports.ERR_UNEXPECTED = "Un expected error";
 exports.ERR_OLD_PASSWORD_INCORRECT = "Old password is incorrect";
 exports.ERR_NO_ROUND_FOUND = "No round found";
 exports.ERR_USER_HAS_NO_PERMISSION = "No permission to do";
+exports.ERR_TEST_NOT_FOUND = "Test not found";

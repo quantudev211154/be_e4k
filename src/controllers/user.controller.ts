@@ -150,6 +150,12 @@ export async function deleteUser(req: Request, res: Response) {
     if (!existUser)
       return HelperUtil.returnErrorResult(res, APIMessage.ERR_NO_USER_FOUND);
 
+    if (existUser.role !== EUserRole.ADMIN)
+      return HelperUtil.returnErrorResult(
+        res,
+        APIMessage.ERR_USER_HAS_NO_PERMISSION
+      );
+
     const userUpdater = {
       isDeleted: true,
     };
